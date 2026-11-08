@@ -56,15 +56,15 @@ export async function signupAction(_prev: FormState, form: FormData): Promise<Fo
 export async function signinAction(_prev: FormState, form: FormData): Promise<FormState> {
   const values = { email: String(form.get("email") ?? "") };
   try {
-    await signIn("credentials", {
-      email: values.email,
-      password: String(form.get("password") ?? ""),
-      redirectTo: "/home",
-    });
+    await signIn("credentials", { email: values.email, password: String(form.get("password") ?? ""), redirect: false });
   } catch (e) {
     if (e instanceof AuthError) return { error: "invalid", values };
-    throw e; // the successful-login redirect is also thrown; let Next.js handle it
+    throw e;
   }
+  // Signed in: use the language this user chose on 69 (also on a new device).
+  const user = await db.query.users.findFirst({ where: eq(schema.users.email, values.email.trim().toLowerCase()), columns: { locale: true } });
+  if (user) (await cookies()).set("locale", user.locale, { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax", httpOnly: true });
+  redirect("/home");
 }
 
 export async function signoutAction() {

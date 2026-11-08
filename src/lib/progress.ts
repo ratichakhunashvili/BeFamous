@@ -51,6 +51,8 @@ export async function setMissionStatus(tx: Tx, userId: string, missionId: string
     .onConflictDoUpdate({
       target: [missionProgress.userId, missionProgress.missionId],
       set: { status, completedAt: status === "completed" ? new Date() : null, updatedAt: new Date() },
+      // A completed mission never goes back (e.g. a second post registered later must not reopen it or re-award XP).
+      setWhere: sql`${missionProgress.status} <> 'completed'`,
     });
 }
 

@@ -2,7 +2,7 @@
 // Social accounts and post verification (56, 57, 59, 66).
 // There is no TikTok/Instagram login yet: "connecting" saves the user's public handle, and the
 // admin compares it with the author of each registered post.
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { redirect, RedirectType } from "next/navigation";
 import { z } from "zod";
 import { db, schema } from "@/db";
@@ -17,6 +17,20 @@ export type HandleFormState = { error?: "handle"; value?: string } | undefined;
 
 /** Optional mission context carried through 13 → 56 → 57 so the user can return to their mission. */
 const withMission = (path: string, missionId: string | null) => (missionId ? `${path}?mission=${missionId}` : path);
+
+/** Where to send someone whose mission is already done: their approved post, else the mission list. */
+async function approvedSubmissionHref(userId: string, missionId: string) {
+  const sub = await db.query.submissions.findFirst({
+    where: and(eq(schema.submissions.userId, userId), eq(schema.submissions.missionId, missionId), eq(schema.submissions.status, "approved")),
+    orderBy: desc(schema.submissions.createdAt),
+  });
+  return sub ? `/submissions/${sub.id}` : "/activity";
+}
+
+async function missionDone(userId: string, missionId: string) {
+  const p = await db.query.missionProgress.findFirst({ where: and(eq(schema.missionProgress.userId, userId), eq(schema.missionProgress.missionId, missionId)) });
+  return p?.status === "completed";
+}
 
 // ---- 56 → handle form → 57 ----
 export async function connectAccountAction(_prev: HandleFormState, form: FormData): Promise<HandleFormState> {
@@ -44,6 +58,7 @@ export async function pickPostAction(form: FormData) {
   const post = await db.query.socialPosts.findFirst({ where: and(eq(schema.socialPosts.id, postId), eq(schema.socialPosts.userId, user.id)) });
   if (!post || post.missionId !== missionId) redirect("/activity");
   if (post.submissionId) redirect(`/submissions/${post.submissionId}`);
+  if (await missionDone(user.id, missionId)) redirect(await approvedSubmissionHref(user.id, missionId));
 
   const mission = await db.query.missions.findFirst({ where: eq(schema.missions.id, missionId) });
   const challenge = mission && (await db.query.challenges.findFirst({ where: eq(schema.challenges.id, mission.challengeId) }));
@@ -78,12 +93,13 @@ export async function confirmPostAction(form: FormData) {
 
   const mission = await db.query.missions.findFirst({ where: eq(schema.missions.id, post.missionId) });
   const challenge = mission && (await db.query.challenges.findFirst({ where: eq(schema.challenges.id, mission.challengeId) }));
-  const progress = await db.query.missionProgress.findFirst({ where: and(eq(schema.missionProgress.userId, user.id), eq(schema.missionProgress.missionId, post.missionId)) });
+  // Mission already approved with another post: nothing to verify, show that result instead of 60.
+  if (!post.submissionId && (await missionDone(user.id, post.missionId))) redirect(await approvedSubmissionHref(user.id, post.missionId));
   const missing = missingHashtags(challenge?.hashtags, post.caption);
 
   await db.transaction(async (tx) => {
     let submissionId = post.submissionId;
-    if (!submissionId && progress?.status !== "completed") {
+    if (!submissionId) {
       const [sub] = await tx
         .insert(schema.submissions)
         .values({

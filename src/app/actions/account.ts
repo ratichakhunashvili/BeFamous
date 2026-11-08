@@ -74,13 +74,14 @@ export async function openNotificationAction(form: FormData) {
 /**
  * Removes the person's data and frees their email so they can sign up again (71 "ახალი ანგარიში").
  * Posts on their own TikTok/Instagram are untouched (we never stored the videos).
- * Submissions stay as anonymous records so a business's campaign history stays consistent.
+ * Submissions are kept for the campaign's history (approved/rejected counts), with the personal
+ * fields cleared; the post link itself stays, since the post is public on the user's own channel.
  */
 export async function deleteAccountAction() {
   const user = await requireUser();
   const randomHash = await bcrypt.hash(randomBytes(32).toString("hex"), 12);
   await db.transaction(async (tx) => {
-    const { users, vouchers, linkedSocialAccounts, notifications, invites, socialPosts, passwordResetTokens, userInterests, xpEvents } = schema;
+    const { users, vouchers, linkedSocialAccounts, notifications, invites, socialPosts, passwordResetTokens, userInterests, xpEvents, submissions } = schema;
     await tx.delete(vouchers).where(and(eq(vouchers.userId, user.id), eq(vouchers.status, "issued")));
     await tx.delete(socialPosts).where(eq(socialPosts.userId, user.id));
     await tx.delete(linkedSocialAccounts).where(eq(linkedSocialAccounts.userId, user.id));
@@ -89,6 +90,7 @@ export async function deleteAccountAction() {
     await tx.delete(passwordResetTokens).where(eq(passwordResetTokens.userId, user.id));
     await tx.delete(userInterests).where(eq(userInterests.userId, user.id));
     await tx.delete(xpEvents).where(eq(xpEvents.userId, user.id));
+    await tx.update(submissions).set({ handle: null, caption: null, thumbnailUrl: null }).where(eq(submissions.userId, user.id));
     await tx
       .update(users)
       .set({
