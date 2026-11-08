@@ -29,7 +29,9 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           {session?.user && (
             <UserSidebar
               isAdmin={session.user.role === "admin"}
+              isBusiness={session.user.role === "business"}
               adminLabel={tp("admin")}
+              businessLabel={tp("business")}
               labels={{ home: t("home"), discover: t("discover"), activity: t("activity"), rewards: t("rewards"), profile: t("profile"), notifications: t("notifications"), badges: tp("badges"), settings: tp("settings"), invite: tp("invite") }}
             />
           )}

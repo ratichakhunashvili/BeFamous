@@ -10,7 +10,7 @@ export type SidebarLabels = Record<"home" | "discover" | "activity" | "rewards" 
 
 const HIDDEN = ["/admin", "/signin", "/signup", "/reset", "/roles", "/terms", "/business", "/account-deleted", "/i/"];
 
-export function UserSidebar({ labels, isAdmin, adminLabel }: { labels: SidebarLabels; isAdmin: boolean; adminLabel: string }) {
+export function UserSidebar({ labels, isAdmin, isBusiness, adminLabel, businessLabel }: { labels: SidebarLabels; isAdmin: boolean; isBusiness: boolean; adminLabel: string; businessLabel: string }) {
   const path = usePathname();
   if (path === "/" || HIDDEN.some((p) => path.startsWith(p))) return null;
   const items = [
@@ -50,10 +50,17 @@ export function UserSidebar({ labels, isAdmin, adminLabel }: { labels: SidebarLa
           })}
         </ul>
       </nav>
-      {isAdmin && (
-        <Link href="/admin" className="mt-auto flex h-11 items-center justify-center rounded-bf-12 border border-line text-label text-text hover:bg-elevated">
-          {adminLabel}
-        </Link>
+      {(isAdmin || isBusiness) && (
+        <div className="mt-auto flex flex-col gap-2">
+          <Link href="/business/panel" className="flex h-11 items-center justify-center rounded-bf-12 bg-action text-label text-white hover:opacity-90">
+            {businessLabel}
+          </Link>
+          {isAdmin && (
+            <Link href="/admin" className="flex h-11 items-center justify-center rounded-bf-12 border border-line text-label text-text hover:bg-elevated">
+              {adminLabel}
+            </Link>
+          )}
+        </div>
       )}
     </aside>
   );

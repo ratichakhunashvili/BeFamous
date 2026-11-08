@@ -1139,7 +1139,8 @@
     "badges": "Badges",
     "settings": "Settings",
     "invite": "Invite a friend",
-    "admin": "Admin panel"
+    "admin": "Admin panel",
+    "business": "Business panel"
   },
   "biz": {
     "nav": {
