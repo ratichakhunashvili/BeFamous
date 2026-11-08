@@ -77,3 +77,52 @@ export async function joinTrend() {
   if (!before.n) return null;
   return Math.round(((recent.n - before.n) / before.n) * 100);
 }
+
+/**
+ * Analytics cards (20 / 43 / 44) for the last `days` days, optionally one campaign.
+ * views = sum of admin-entered post views (cumulative, not per period) — null when no post has numbers.
+ * visits = null for a campaign without a QR visit (not 0).
+ */
+export async function periodStats(days: number, challengeId?: string) {
+  const since = new Date(Date.now() - days * 86_400_000);
+  const { participations: p, submissions: s, missions: m, checkins: ck, qrCodes: q, socialPosts: sp, challenges: ch } = schema;
+  const [[joined], [approved], [visits], viewsRow, campaign] = await Promise.all([
+    db.select({ n: countDistinct(p.userId) }).from(p).where(and(gte(p.joinedAt, since), challengeId ? eq(p.challengeId, challengeId) : undefined)),
+    db
+      .select({ n: count() })
+      .from(s)
+      .innerJoin(m, eq(m.id, s.missionId))
+      .where(and(eq(s.status, "approved"), gte(s.reviewedAt, since), challengeId ? eq(m.challengeId, challengeId) : undefined)),
+    db
+      .select({ n: count() })
+      .from(ck)
+      .innerJoin(q, eq(q.id, ck.qrCodeId))
+      .innerJoin(m, eq(m.id, q.missionId))
+      .where(and(gte(ck.createdAt, since), challengeId ? eq(m.challengeId, challengeId) : undefined)),
+    db
+      .select({
+        views: sql<number | null>`sum((${sp.metrics}->>'views')::bigint)`.mapWith((v) => (v == null ? null : Number(v))),
+        withMetrics: sql<number>`count(*) filter (where ${sp.metrics}->>'views' is not null)`.mapWith(Number),
+        posts: count(),
+        lastSynced: sql<Date | null>`max(${sp.lastSyncedAt})`.mapWith((v) => (v ? new Date(v) : null)),
+      })
+      .from(sp)
+      .innerJoin(m, eq(m.id, sp.missionId))
+      .where(and(eq(sp.status, "verified"), challengeId ? eq(m.challengeId, challengeId) : undefined)),
+    challengeId ? db.query.challenges.findFirst({ where: eq(ch.id, challengeId), columns: { kind: true } }) : Promise.resolve(undefined),
+  ]);
+  const v = viewsRow[0];
+  return {
+    joined: joined.n,
+    approved: approved.n,
+    visits: campaign && campaign.kind !== "visit" ? null : visits.n,
+    views: v && v.withMetrics > 0 ? v.views : null,
+    viewsCoverage: { withMetrics: v?.withMetrics ?? 0, posts: v?.posts ?? 0 },
+    lastSynced: v?.lastSynced ?? null,
+  };
+}
+
+/** The moment `days` days ago (for "last N days" filters). */
+export function sinceDays(days: number) {
+  return new Date(Date.now() - days * 86_400_000);
+}

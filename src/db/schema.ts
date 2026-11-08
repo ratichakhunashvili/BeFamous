@@ -405,6 +405,24 @@ export const socialPosts = pgTable("social_posts", {
 });
 
 // ---------- Audit log (admin actions) ----------
+// ---------- Winners (admin 48 / 49) ----------
+// Chosen by hand from approved posts; confirmedAt set on 49 (then winners are notified).
+export const challengeWinners = pgTable(
+  "challenge_winners",
+  {
+    id: id(),
+    challengeId: uuid("challenge_id").notNull().references(() => challenges.id, { onDelete: "cascade" }),
+    category: text("category").notNull(), // "creative" | "audience" | "business"
+    userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    submissionId: uuid("submission_id").references(() => submissions.id, { onDelete: "set null" }),
+    note: text("note"),
+    decidedBy: uuid("decided_by").references(() => users.id, { onDelete: "set null" }),
+    decidedAt: timestamp("decided_at", { withTimezone: true }).notNull().defaultNow(),
+    confirmedAt: timestamp("confirmed_at", { withTimezone: true }),
+  },
+  (t) => [uniqueIndex("challenge_winners_category_idx").on(t.challengeId, t.category)],
+);
+
 export const auditLog = pgTable("audit_log", {
   id: id(),
   actorId: uuid("actor_id").references(() => users.id, { onDelete: "set null" }),

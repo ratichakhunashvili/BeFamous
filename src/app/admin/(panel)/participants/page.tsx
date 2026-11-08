@@ -47,7 +47,7 @@ export default async function ParticipantsPage({ searchParams }: PageProps<"/adm
           </AdminPanel>
         ))}
         <div className="w-[310px]">
-          <ButtonLink href="/admin/winners" className="!h-[52px] !bg-primary !font-bold !text-on-primary">
+          <ButtonLink href="/admin/participants/winners" className="!h-[52px] !bg-primary !font-bold !text-on-primary">
             {t("winners")}
           </ButtonLink>
         </div>

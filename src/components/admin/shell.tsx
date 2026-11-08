@@ -151,3 +151,22 @@ export function StatCard({ href, icon, label, value, sub }: { href?: string; ico
     <div className={cls}>{body}</div>
   );
 }
+
+/** Title used by the simpler Figma screens (48, 49, 51–56): 28px bold + 15px muted line. */
+export function SimpleTitle({ title, body }: { title: string; body?: string }) {
+  return (
+    <div className="flex flex-col gap-2">
+      <h1 className="text-[28px] font-bold leading-normal text-text">{title}</h1>
+      {body && <p className="text-[15px] text-muted">{body}</p>}
+    </div>
+  );
+}
+
+/** Lilac 310×52 button from those screens ("Winner flow / next"). */
+export function LilacButton({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <Link href={href} className="flex h-[52px] w-[310px] items-center justify-center rounded-bf-12 bg-primary text-[14px] font-bold text-on-primary transition-opacity hover:opacity-90">
+      {children}
+    </Link>
+  );
+}

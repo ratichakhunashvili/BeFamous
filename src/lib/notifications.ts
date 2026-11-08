@@ -34,6 +34,8 @@ export function notificationHref(kind: string, data: Data) {
       return str(data, "slug") ? `/challenges/${str(data, "slug")}` : "/activity";
     case "invite_accepted":
       return "/invite";
+    case "winner":
+      return submissionId ? `/submissions/${submissionId}` : "/activity";
     case "account_expired":
       return `/accounts/${str(data, "platform") ?? "tiktok"}/expired`;
     case "post_found":
@@ -133,6 +135,13 @@ export async function getNotificationCards(userId: string, locale: Locale): Prom
         const ch = challenges.find((x) => x.id === str(data, "challengeId"));
         icon = "/figma/icon-check.svg";
         title = t("challengeDone");
+        detail = ch ? tr(ch, "title", locale) : "";
+        break;
+      }
+      case "winner": {
+        const ch = challenges.find((x) => x.id === str(data, "challengeId"));
+        icon = "/figma/icon-badge.svg";
+        title = t("winner", { category: t(`winnerCategory.${str(data, "category") ?? "creative"}`) });
         detail = ch ? tr(ch, "title", locale) : "";
         break;
       }
