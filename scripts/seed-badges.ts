@@ -28,7 +28,7 @@ export const badgeSeed: Collection[] = [
     slug: "flavor-legend", nameKa: "Flavor Legend", nameEn: "Flavor Legend",
     subtitleKa: "კულინარია და კაფეები", subtitleEn: "Food & cafés",
     bonusKa: "უფასო ვახშამი ან ყავა თვეში ერთხელ", bonusEn: "A free dinner or coffee once a month",
-    icon: "/figma/icon-coffee.svg", heroUrl: "/figma/coffee-media.jpg", interest: "cafes",
+    icon: "/figma/icon-coffee.svg", heroUrl: "/figma/coffee-hero.jpg", interest: "cafes",
     levels: [
       { nameKa: "Crumb Hunter", nameEn: "Crumb Hunter", xp: 100, ka: "პირველი საიდუმლო შეკვეთა ან 1 კაფეს ჩელენჯი", en: "First secret order or 1 café challenge", rule: c(1) },
       { nameKa: "Foodie Explorer", nameEn: "Foodie Explorer", xp: 450, ka: "3 სხვადასხვა კერძის ან სასმლის ASMR / ემოციური რევიუ", en: "3 ASMR / emotional reviews of different dishes or drinks", rule: c(3) },

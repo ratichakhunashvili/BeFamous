@@ -48,8 +48,8 @@ export const challengeSeed = [
     rewardKa: "50 ₾ ვაუჩერი",
     rewardEn: "50 ₾ voucher",
     hashtags: "#BeFamous #SecretCoffee",
-    coverUrl: "/figma/challenge-coffee-cover.png",
-    heroUrl: "/figma/coffee-media.jpg",
+    coverUrl: "/figma/coffee-card.jpg",
+    heroUrl: "/figma/coffee-hero.jpg",
     city: "tbilisi",
     sortOrder: 1,
     steps: [
