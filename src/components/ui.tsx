@@ -1,0 +1,134 @@
+// Shared building blocks that mirror the Figma components
+// (Action / Primary · Secondary · Quiet, Field, list rows, app bar).
+import Image from "next/image";
+import Link from "next/link";
+import type { ComponentProps, ReactNode } from "react";
+import { BackButton } from "./back-button";
+import { Logo } from "./logo";
+
+/** Phone-width column (390px, like the Figma frames), centred on larger screens. */
+export function Screen({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <div className={`relative mx-auto min-h-dvh w-full max-w-[390px] overflow-x-clip bg-bg ${className}`}>{children}</div>;
+}
+
+type BackTarget = string | "history";
+
+/** Top app bar: optional back button + BEFAMOUS brand (links to welcome). The theme toggle was removed on purpose. */
+export function AppBar({ back, backStyle = "filled", brandLabel }: { back?: BackTarget; backStyle?: "filled" | "plain"; brandLabel: string }) {
+  return (
+    <header className="relative z-10 h-[49px] w-full">
+      {back && <BackButton href={back} filled={backStyle === "filled"} label="back" />}
+      <Link href="/" className={`absolute top-[5px] flex h-[44px] w-[155px] items-center gap-[9px] ${back ? "left-[64px]" : "left-[20px]"}`}>
+        <Logo size={29} priority />
+        <span className="text-label text-white">{brandLabel}</span>
+      </Link>
+    </header>
+  );
+}
+
+const variants = {
+  primary: "bg-action text-white",
+  secondary: "border border-line bg-surface text-white",
+  quiet: "bg-elevated text-white",
+} as const;
+
+type Variant = keyof typeof variants;
+const btnBase = "flex h-12 w-full items-center justify-center rounded-bf-12 px-3 text-center text-label transition-opacity hover:opacity-90 disabled:opacity-60";
+
+export function ButtonLink({ variant = "primary", className = "", ...props }: ComponentProps<typeof Link> & { variant?: Variant }) {
+  return <Link {...props} className={`${btnBase} ${variants[variant]} ${className}`} />;
+}
+
+export function Button({ variant = "primary", className = "", ...props }: ComponentProps<"button"> & { variant?: Variant }) {
+  return <button {...props} className={`${btnBase} ${variants[variant]} ${className}`} />;
+}
+
+/** Labelled text field with an optional icon on the right (Figma "Field"). */
+export function Field({
+  label,
+  icon,
+  hint,
+  error,
+  hintGap = false,
+  ...input
+}: ComponentProps<"input"> & { label: string; icon?: string; hint?: string; error?: string; hintGap?: boolean }) {
+  return (
+    <label className={`flex w-full flex-col ${hintGap ? "gap-5" : "gap-2"}`}>
+      <span className="text-label text-white">{label}</span>
+      <span className="relative block h-12 w-full overflow-clip rounded-bf-12 border border-line bg-surface">
+        <input
+          {...input}
+          className={`h-full w-full bg-transparent pl-[15px] text-body text-white outline-none placeholder:text-muted focus:ring-2 focus:ring-primary/60 focus:ring-inset ${icon ? "pr-11" : "pr-[15px]"} rounded-bf-12`}
+        />
+        {icon && <Image src={icon} alt="" width={18} height={18} className="pointer-events-none absolute right-[15px] top-[14px] size-[18px]" />}
+      </span>
+      {hint && <span className="text-caption text-white">{hint}</span>}
+      {error && <span className="text-caption text-chart" role="alert">{error}</span>}
+    </label>
+  );
+}
+
+/** Card row with an icon tile and two lines of text (used on 02, 04, 31, 73). */
+export function InfoRow({
+  icon,
+  title,
+  body,
+  href,
+  chevron,
+  layout = "start",
+}: {
+  icon: string;
+  title: string;
+  body: string;
+  href?: string;
+  chevron?: string;
+  /** "start" = left-aligned with 4px gap (02); "centered" = centred with 20px gap (04, 31, 73) as drawn in Figma. */
+  layout?: "start" | "centered";
+}) {
+  const content = (
+    <>
+      <span className="relative size-9 shrink-0 overflow-clip rounded-bf-12 bg-elevated">
+        <Image src={icon} alt="" width={20} height={20} className="absolute left-2 top-2 size-5" />
+      </span>
+      <span className={`flex min-w-0 flex-1 flex-col text-white ${layout === "centered" ? "gap-5 text-center" : "gap-1 text-left"}`}>
+        <span className="text-label">{title}</span>
+        <span className="text-caption">{body}</span>
+      </span>
+      {chevron && <Image src={chevron} alt="" width={16} height={16} className="size-4 shrink-0" />}
+    </>
+  );
+  const cls = "flex w-full items-center gap-3 overflow-clip rounded-bf-16 border border-line bg-surface p-3";
+  return href ? (
+    <Link href={href} className={`${cls} transition-colors hover:bg-elevated/60`}>
+      {content}
+    </Link>
+  ) : (
+    <div className={cls}>{content}</div>
+  );
+}
+
+/** Eyebrow + H2 title + body, as in every "Page title" block. */
+export function PageTitle({ eyebrow, title, body, align = "center", gap = 20 }: { eyebrow: string; title: string; body: string; align?: "center" | "start" | "mixed"; gap?: 8 | 20 }) {
+  const t = align === "center" ? "text-center" : "text-left";
+  const side = align === "mixed" ? "text-center" : t;
+  return (
+    <div className={`flex w-full flex-col text-white ${gap === 8 ? "gap-2" : "gap-5"}`}>
+      <p className={`whitespace-pre-wrap text-caption ${side}`}>{eyebrow}</p>
+      <h1 className={`text-h2 ${t}`}>{title}</h1>
+      <p className={`text-body ${side}`}>{body}</p>
+    </div>
+  );
+}
+
+/** Auth-style screen: purple curves behind, solid content panel starting 58px below the app bar. */
+export function CurvesBackdrop({ children }: { children: ReactNode }) {
+  return (
+    <main className="relative min-h-[754px] pt-[58px]">
+      {/* Fixed 390×754 like the Figma layer, so it never stretches with taller content. */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[754px]" aria-hidden>
+        <Image src="/figma/bg-curves.png" alt="" fill sizes="390px" className="object-fill" priority />
+      </div>
+      <div className="relative flex flex-col items-start gap-5 bg-bg p-5">{children}</div>
+    </main>
+  );
+}

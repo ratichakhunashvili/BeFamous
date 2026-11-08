@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+/* BEFAMOUS dark theme: values from the Figma "BEFAMOUS / Color" collection, Dark mode. */
+:root {
+  --bf-bg: #0e121c;
+  --bf-surface: #222437;
+  --bf-elevated: #2b2d43;
+  --bf-primary: #ad91ff;
+  --bf-hover: #c4b0ff;
+  --bf-accent: #d9f66f;
+  --bf-text: #f8f7ff;
+  --bf-muted: #aaa7c0;
+  --bf-border: #3a3c50;
+  --bf-chart: #ff91af;
+  --bf-on-primary: #0e121c;
+  /* Primary action buttons use this fixed purple in the dark frames */
+  --bf-action: #7524c5;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bf-bg);
+  --color-surface: var(--bf-surface);
+  --color-elevated: var(--bf-elevated);
+  --color-primary: var(--bf-primary);
+  --color-hover: var(--bf-hover);
+  --color-accent: var(--bf-accent);
+  --color-text: var(--bf-text);
+  --color-muted: var(--bf-muted);
+  --color-line: var(--bf-border);
+  --color-chart: var(--bf-chart);
+  --color-action: var(--bf-action);
+  --font-sans: var(--font-noto-georgian), system-ui, sans-serif;
+  --radius-bf-8: 8px;
+  --radius-bf-12: 12px;
+  --radius-bf-16: 16px;
+  --radius-bf-24: 24px;
+}
+
+body {
+  background: var(--bf-bg);
+  color: var(--bf-text);
+}
+
+/* Type scale (BEFAMOUS text styles) */
+@utility text-display {
+  font-size: 48px;
+  line-height: 62px;
+  font-weight: 700;
+}
+@utility text-h1 {
+  font-size: 32px;
+  line-height: 44px;
+  font-weight: 700;
+}
+@utility text-h2 {
+  font-size: 24px;
+  line-height: 34px;
+  font-weight: 700;
+}
+@utility text-h3 {
+  font-size: 18px;
+  line-height: 27px;
+  font-weight: 700;
+}
+@utility text-body {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 400;
+}
+@utility text-label {
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: 500;
+}
+@utility text-caption {
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 400;
+}

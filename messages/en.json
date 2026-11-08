@@ -1,0 +1,82 @@
+{
+  "common": {
+    "brand": "BEFAMOUS",
+    "back": "Back",
+    "close": "Close",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "signin": "Sign in",
+    "signup": "Sign up"
+  },
+  "welcome": {
+    "eyebrow": "BEFAMOUS  /  CREATOR CLUB",
+    "title": "Your creativity starts here",
+    "body": "Pick a challenge, share your work and earn XP and rewards.",
+    "start": "Get started",
+    "mediaAlt": "CREATE / SHARE / EARN — MAKE IT YOURS."
+  },
+  "roles": {
+    "eyebrow": "01 / Account type",
+    "title": "How will you join us?",
+    "body": "Choose the space that fits your goal.",
+    "userTitle": "Creator",
+    "userBody": "Discover challenges and earn rewards",
+    "businessTitle": "Business",
+    "businessBody": "Create campaigns and measure results",
+    "haveAccount": "Already have an account?"
+  },
+  "signin": {
+    "eyebrow": "BEFAMOUS  /  Account",
+    "title": "Welcome back!",
+    "body": "Sign in and continue your challenges.",
+    "forgot": "Forgot password?",
+    "invalid": "Email or password is incorrect.",
+    "resetDone": "Password changed. Sign in with your new password."
+  },
+  "signup": {
+    "eyebrow": "02 / New account",
+    "title": "Create an account",
+    "body": "Fill in your details and pick your interests.",
+    "passwordHint": "At least 8 characters",
+    "termsTitle": "Terms & privacy",
+    "termsBody": "Read the terms before continuing",
+    "submit": "Agree and continue",
+    "errors": {
+      "name": "Enter your name.",
+      "email": "Enter a valid email.",
+      "password": "Password must be at least 8 characters.",
+      "taken": "An account with this email already exists."
+    }
+  },
+  "reset": {
+    "eyebrow": "Account",
+    "title": "Reset password",
+    "body": "We will email you a reset link.",
+    "send": "Send link",
+    "sentTitle": "Check your email",
+    "sentBody": "A reset link was sent to {email}.",
+    "backToSignin": "Back to sign in",
+    "resend": "Send again",
+    "newTitle": "New password",
+    "newBody": "Enter a new password for your account.",
+    "newPassword": "New password",
+    "save": "Save password",
+    "invalidLink": "This link is invalid or expired. Request a new one."
+  },
+  "terms": {
+    "eyebrow": "Information",
+    "title": "Terms & privacy",
+    "body": "Learn how we handle your content.",
+    "originalTitle": "Original content",
+    "originalBody": "Only publish your own work.",
+    "reviewTitle": "Review",
+    "reviewBody": "Missions are checked against the rules.",
+    "dataTitle": "Your data",
+    "dataBody": "You can change your choices at any time."
+  },
+  "pending": {
+    "title": "Coming soon",
+    "body": "This screen is built in a later phase."
+  }
+}
