@@ -84,7 +84,7 @@ async function main() {
         interestId: interestId(c.interest),
         categoryKa: i?.nameKa.toLocaleUpperCase("ka") ?? null,
         categoryEn: i?.nameEn.toUpperCase() ?? null,
-        coverArt: { icon: c.interest === "tech" ? "tech" : "camera", kicker: i?.nameEn.toUpperCase() ?? "BEFAMOUS", label: c.en.toUpperCase() },
+        coverArt: { icon: c.interest, kicker: i?.nameEn.toUpperCase() ?? "BEFAMOUS", label: c.en.toUpperCase() },
         kind: c.kind,
         city: c.city,
         hashtags,

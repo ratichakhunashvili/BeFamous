@@ -71,7 +71,7 @@ export async function createBusinessCampaignAction(_prev: BusinessFormState, for
         interestId: interest?.id ?? null,
         categoryKa: interest?.nameKa.toLocaleUpperCase("ka") ?? null,
         categoryEn: interest?.nameEn.toUpperCase() ?? null,
-        coverArt: { icon: interest?.slug === "tech" ? "tech" : "camera", kicker: interest?.nameEn.toUpperCase() ?? "BEFAMOUS", label: d.titleEn.toUpperCase() },
+        coverArt: { icon: interest?.slug ?? "camera", kicker: interest?.nameEn.toUpperCase() ?? "BEFAMOUS", label: d.titleEn.toUpperCase() },
         kind: d.kind,
         city: d.city || null,
         hashtags: d.hashtags,

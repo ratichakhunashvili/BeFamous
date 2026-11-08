@@ -74,7 +74,7 @@ export async function saveBasicsAction(_prev: WizardState, form: FormData): Prom
     interestId: interest?.id ?? null,
     categoryKa: interest ? interest.nameKa.toLocaleUpperCase("ka") : null,
     categoryEn: interest ? interest.nameEn.toUpperCase() : null,
-    coverArt: { icon: "camera", kicker: interest ? interest.nameEn.toUpperCase() : "BEFAMOUS", label: d.titleEn.toUpperCase() },
+    coverArt: { icon: interest?.slug ?? "camera", kicker: interest ? interest.nameEn.toUpperCase() : "BEFAMOUS", label: d.titleEn.toUpperCase() },
     kind: d.kind,
     city: d.city || null,
     hashtags: d.hashtags,
