@@ -20,9 +20,9 @@ waiting → found → ownership-check → verified | unavailable | metrics-unava
 
 ## Phases (each ends with screenshots compared to Figma and your approval)
 1. **Foundation**: scaffold, tokens, fonts, i18n, DB schema, migrations, seed, auth (screens 01–04, 29–31, 73).
-2. **Core user flow**: interests, home, discover/search/filter, challenge detail and levels, join, missions (05–11, 32–38, 47–50, 65).
+2. **Core user flow**: interests, home, discover/search/filter, challenge detail and levels, join, missions (05–11, 32–38, 65) — done.
 3. **Proof**: QR check-in (camera scan), uploads and states, revision/approval, location (12–16, 39–42, 53).
-4. **Progress and rewards**: activity, XP/levels, streaks, badges, rewards, vouchers (17–23, 43–44, 51, 67).
+4. **Progress and rewards**: activity, XP/levels, streaks, badges, rewards, vouchers (17–23, 43–44, 47–50 badge levels, 51, 67).
 5. **Social and account**: notifications, profile edit, settings, language, invites, linked accounts and post verification, delete account, business-account screen (24–28, 45–46, 52, 54–64, 66, 69–72). Removed: theme toggle and `68 გარეგნობა`.
 6. **Admin** (page 04, 1440px desktop): dashboard, challenges/campaigns CRUD, mission config, submission review (approve / request revision / reject), winners, rewards/vouchers and voucher check, QR codes, users, analytics.
 7. Hardening: tests for permissions and XP rules, error/empty states, deploy.
