@@ -12,7 +12,7 @@ export function SidebarNav({ items }: { items: NavItem[] }) {
   return (
     <ul className="flex flex-col gap-2">
       {items.map((item) => {
-        const active = item.href === "/admin" ? path === "/admin" : path.startsWith(item.href);
+        const active = item.href === items[0].href ? path === item.href : path.startsWith(item.href);
         return (
           <li key={item.href}>
             <Link
@@ -37,7 +37,7 @@ export function MobileTabs({ items }: { items: NavItem[] }) {
   return (
     <ul className="flex gap-1">
       {items.map((item) => {
-        const active = item.href === "/admin" ? path === "/admin" : path.startsWith(item.href);
+        const active = item.href === items[0].href ? path === item.href : path.startsWith(item.href);
         return (
           <li key={item.href} className="shrink-0">
             <Link href={item.href} aria-current={active ? "page" : undefined} className={`flex h-10 items-center rounded-full px-3 text-caption ${active ? "bg-primary text-on-primary" : "text-muted hover:bg-elevated"}`}>

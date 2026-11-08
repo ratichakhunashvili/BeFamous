@@ -2,7 +2,7 @@
 // posts waiting for review, campaigns ending within 7 days, found posts participants declined,
 // and linked accounts flagged for reconnection.
 import Link from "next/link";
-import { and, asc, desc, eq, gte, lte } from "drizzle-orm";
+import { and, asc, desc, eq, gte, isNotNull, lte } from "drizzle-orm";
 import { getLocale, getTranslations } from "next-intl/server";
 import { AdminBody, AdminHeader, LilacButton, SimpleTitle } from "@/components/admin/shell";
 import { db, schema } from "@/db";
@@ -17,6 +17,7 @@ export default async function AdminNotificationsPage() {
   const t = await getTranslations("admin.notifications");
   const c = await getTranslations("admin");
   const now = new Date();
+  const bizDrafts = await db.select().from(schema.challenges).where(and(eq(schema.challenges.status, "draft"), isNotNull(schema.challenges.ownerId)));
   const [pending, ending, declined, expired] = await Promise.all([
     db
       .select({ id: schema.submissions.id, name: schema.users.name, at: schema.submissions.createdAt })
@@ -45,6 +46,7 @@ export default async function AdminNotificationsPage() {
       .limit(10),
   ]);
   const items = [
+    ...bizDrafts.map((ch) => ({ key: ch.id, href: `/admin/campaigns/${ch.id}/edit/review`, text: t("bizDraft", { title: tr(ch, "title", locale), brand: ch.brand ?? "" }) })),
     ...pending.map((p) => ({ key: p.id, href: `/admin/participants/${p.id}`, text: t("newWork", { name: p.name }) })),
     ...ending.map((ch) => ({ key: ch.id, href: `/admin/campaigns/${ch.id}`, text: t("endingSoon", { title: tr(ch, "title", locale), date: ch.endsAt ? dayMonth(ch.endsAt, locale) : "" }) })),
     ...declined.map((d) => ({ key: d.id, href: "/admin/participants", text: t("declined", { name: d.name }) })),

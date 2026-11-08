@@ -33,6 +33,10 @@ export async function AdminSidebar() {
       </nav>
       <div className="mt-auto flex flex-col gap-[10px]">
         <span className="mx-2 mb-1 h-px bg-line" />
+        <Link href="/business/panel" className={bottom}>
+          <Image src="/figma/admin/nav-campaign-20.svg" alt="" width={20} height={20} className="size-5" />
+          {t("business")}
+        </Link>
         <Link href="/home" className={bottom}>
           <Image src="/figma/admin/nav-profile-20.svg" alt="" width={20} height={20} className="size-5" />
           {t("userSpace")}

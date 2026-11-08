@@ -22,3 +22,17 @@ export async function requireAdminPage() {
   if (session.user.role !== "admin") redirect("/home");
   return session.user;
 }
+
+/** Business panel: businesses and admins (admins see it to support businesses and for testing). */
+export async function requireBusinessPage() {
+  const session = await auth();
+  if (!session?.user) redirect("/signin");
+  if (session.user.role !== "business" && session.user.role !== "admin") redirect("/business");
+  return session.user;
+}
+
+export async function requireBusiness() {
+  const user = await requireUser();
+  if (user.role !== "business" && user.role !== "admin") redirect("/business");
+  return user;
+}

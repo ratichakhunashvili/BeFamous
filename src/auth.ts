@@ -59,7 +59,7 @@ export const {
     },
     session({ session, token }) {
       session.user.id = token.sub!;
-      session.user.role = token.role as "user" | "admin";
+      session.user.role = token.role as "user" | "admin" | "business";
       return session;
     },
   },

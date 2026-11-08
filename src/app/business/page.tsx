@@ -13,7 +13,7 @@ export default async function BusinessPage() {
         <InfoRow layout="centered" icon="/figma/icon-campaign.svg" title={t("campaign")} body={t("campaignBody")} />
         <InfoRow layout="centered" icon="/figma/icon-team.svg" title={t("review")} body={t("reviewBody")} />
         <InfoRow layout="centered" icon="/figma/icon-chart-20.svg" title={t("metrics")} body={t("metricsBody")} />
-        <ButtonLink href="/admin">{t("open")}</ButtonLink>
+        <ButtonLink href="/business/panel">{t("open")}</ButtonLink>
         <ButtonLink href="/signup" variant="secondary">
           {t("asUser")}
         </ButtonLink>

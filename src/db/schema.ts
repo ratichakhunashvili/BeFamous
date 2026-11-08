@@ -21,7 +21,7 @@ const id = () => uuid("id").primaryKey().defaultRandom();
 const createdAt = () => timestamp("created_at", { withTimezone: true }).notNull().defaultNow();
 
 // ---------- Users & auth ----------
-export const roleEnum = pgEnum("role", ["user", "admin"]);
+export const roleEnum = pgEnum("role", ["user", "admin", "business"]);
 export const localeEnum = pgEnum("locale", ["ka", "en"]);
 
 export const users = pgTable(
@@ -115,6 +115,8 @@ export const challenges = pgTable("challenges", {
   startsAt: timestamp("starts_at", { withTimezone: true }),
   endsAt: timestamp("ends_at", { withTimezone: true }),
   xpReward: integer("xp_reward").notNull().default(0),
+  // The business that proposed it in the business panel (null = created by the BeFamous team).
+  ownerId: uuid("owner_id").references((): AnyPgColumn => users.id, { onDelete: "set null" }),
   createdAt: createdAt(),
 });
 
