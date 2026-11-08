@@ -29,6 +29,7 @@ export default async function HomePage() {
 
   // Featured = first challenge matching the user's interests, otherwise the first one.
   const featured = list.find((r) => r.challenge.interestId && interestIds.includes(r.challenge.interestId)) ?? list[0];
+  const more = [featured, ...list.filter((r) => r !== featured)].filter(Boolean).slice(0, 8);
   const firstName = (user?.name ?? "").split(" ")[0];
   const date = new Intl.DateTimeFormat(locale === "en" ? "en-GB" : "ka-GE", { day: "2-digit", month: "long", timeZone: "Asia/Tbilisi" }).format(new Date());
   const xp = user?.xp ?? 0;
@@ -36,7 +37,7 @@ export default async function HomePage() {
   return (
     <Screen>
       <TabTopBar />
-      <main className="flex flex-col gap-5 p-5 pb-[110px]">
+      <main className="bf-home flex flex-col gap-5 p-5 pb-[110px]">
         <div className="flex flex-col gap-5 text-white">
           <p className="whitespace-pre-wrap text-caption">{t("eyebrow", { date })}</p>
           <h1 className="text-h2">{t("greeting", { name: firstName })}</h1>
@@ -55,17 +56,23 @@ export default async function HomePage() {
           </ButtonLink>
         </div>
 
-        {featured && (
-          <ChallengeCard
-            mediaHeight={190}
-            c={{
-              slug: featured.challenge.slug,
-              title: tr(featured.challenge, "title", locale),
-              meta: `${featured.challenge.brand}  ·  +${featured.challenge.xpReward} XP`,
-              coverUrl: featured.challenge.coverUrl,
-              coverArt: featured.challenge.coverArt,
-            }}
-          />
+        {more.length > 0 && (
+          <div className="bf-home-grid flex w-full flex-col gap-5">
+            {more.map((r, i) => (
+              <div key={r!.challenge.slug} className={i === 0 ? "" : "hidden lg:block"}>
+                <ChallengeCard
+                  mediaHeight={190}
+                  c={{
+                    slug: r!.challenge.slug,
+                    title: tr(r!.challenge, "title", locale),
+                    meta: `${r!.challenge.brand}  ·  +${r!.challenge.xpReward} XP`,
+                    coverUrl: r!.challenge.coverUrl,
+                    coverArt: r!.challenge.coverArt,
+                  }}
+                />
+              </div>
+            ))}
+          </div>
         )}
 
         <InfoRow href="/badges" layout="centered" icon="/figma/icon-badge.svg" chevron="/figma/icon-chevron.svg" title={t("badges")} body={t("badgesMeta", { collections: badgeCount, levels: levelCount })} />

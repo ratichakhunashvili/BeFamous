@@ -92,15 +92,14 @@ body {
   body:has(aside[data-user-sidebar]) .bf-curves { display: none; }
   body:has(aside[data-user-sidebar]) .bf-backdrop { padding-top: 8px; min-height: 0; }
   body:has(aside[data-user-sidebar]) .bf-content {
-    max-width: 1120px;
-    margin: 0 auto;
+    max-width: none;
+    margin: 0;
     padding: 24px 40px 40px;
     gap: 24px;
   }
   body:has(aside[data-user-sidebar]) .bf-topbar,
   body:has(aside[data-user-sidebar]) .bf-screen > header {
-    max-width: 1120px;
-    margin: 0 auto;
+    max-width: none;
   }
   body:has(aside[data-user-sidebar]) .bf-topbar-search { left: auto; right: 88px; }
   body:has(aside[data-user-sidebar]) .bf-topbar-bell { left: auto; right: 40px; }
@@ -111,10 +110,14 @@ body {
   }
   body:has(aside[data-user-sidebar]) .bf-sticky-inner { max-width: 480px; margin: 0 auto; }
   /* card lists → 3 columns */
-  body:has(aside[data-user-sidebar]) .bf-card-grid {
+  body:has(aside[data-user-sidebar]) .bf-card-grid,
+  body:has(aside[data-user-sidebar]) .bf-home-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 250px));
+    gap: 20px;
   }
+  body:has(aside[data-user-sidebar]) .bf-home { padding: 24px 32px 40px; }
+  body:has(aside[data-user-sidebar]) .bf-home-grid .bf-card-media { height: 180px !important; }
   body:has(aside[data-user-sidebar]) .bf-card-pair { display: contents; }
-  body:has(aside[data-user-sidebar]) .bf-card-media { height: 200px !important; }
+  body:has(aside[data-user-sidebar]) .bf-card-media { height: 180px !important; }
 }
