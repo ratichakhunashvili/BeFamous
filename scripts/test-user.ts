@@ -1,4 +1,5 @@
-// ⚠️ TEMPORARY: creates (or resets) the test account test@test.com / test123.
+// ⚠️ TEMPORARY: creates (or resets) the test account test@test.com / test123 — a user AND an admin
+// (the owner chose full admin access for it, also on the live site).
 //   npm run dev:test-user          create or update the account (all interests, Tbilisi)
 //   npm run dev:test-user -- reset also wipe its progress, posts, vouchers and notifications
 // Signing in with it only works locally with ENABLE_TEST_USER=true (see src/lib/test-mode.ts).
@@ -16,8 +17,8 @@ async function main() {
   const passwordHash = await bcrypt.hash(TEST_ACCOUNT.password, 12);
   const [user] = await db
     .insert(schema.users)
-    .values({ name: TEST_ACCOUNT.name, email: TEST_ACCOUNT.email, passwordHash, city: "tbilisi", termsAcceptedAt: new Date() })
-    .onConflictDoUpdate({ target: schema.users.email, set: { passwordHash, deletedAt: null, role: "user", name: TEST_ACCOUNT.name } })
+    .values({ name: TEST_ACCOUNT.name, email: TEST_ACCOUNT.email, passwordHash, role: "admin", city: "tbilisi", termsAcceptedAt: new Date() })
+    .onConflictDoUpdate({ target: schema.users.email, set: { passwordHash, deletedAt: null, role: "admin", name: TEST_ACCOUNT.name } })
     .returning();
   const interests = await db.select({ id: schema.interests.id }).from(schema.interests);
   await db.delete(schema.userInterests).where(eq(schema.userInterests.userId, user.id));
