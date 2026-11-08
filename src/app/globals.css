@@ -79,3 +79,42 @@ body {
   line-height: 18px;
   font-weight: 400;
 }
+
+/* ---------- Desktop layout for the signed-in user app (≥1024px, only when the user sidebar shows).
+   Phones and signed-out pages keep the Figma mobile layout untouched. ---------- */
+@media (min-width: 1024px) {
+  body:has(aside[data-user-sidebar]) .bf-screen {
+    max-width: none;
+    margin-left: 240px;
+    margin-right: 0;
+    width: auto;
+  }
+  body:has(aside[data-user-sidebar]) .bf-curves { display: none; }
+  body:has(aside[data-user-sidebar]) .bf-backdrop { padding-top: 8px; min-height: 0; }
+  body:has(aside[data-user-sidebar]) .bf-content {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 24px 40px 40px;
+    gap: 24px;
+  }
+  body:has(aside[data-user-sidebar]) .bf-topbar,
+  body:has(aside[data-user-sidebar]) .bf-screen > header {
+    max-width: 1120px;
+    margin: 0 auto;
+  }
+  body:has(aside[data-user-sidebar]) .bf-topbar-search { left: auto; right: 88px; }
+  body:has(aside[data-user-sidebar]) .bf-topbar-bell { left: auto; right: 40px; }
+  body:has(aside[data-user-sidebar]) .bf-sticky {
+    left: 240px;
+    max-width: none;
+    margin: 0;
+  }
+  body:has(aside[data-user-sidebar]) .bf-sticky-inner { max-width: 480px; margin: 0 auto; }
+  /* card lists → 3 columns */
+  body:has(aside[data-user-sidebar]) .bf-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  body:has(aside[data-user-sidebar]) .bf-card-pair { display: contents; }
+  body:has(aside[data-user-sidebar]) .bf-card-media { height: 200px !important; }
+}

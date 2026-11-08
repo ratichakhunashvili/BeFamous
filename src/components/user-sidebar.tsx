@@ -25,7 +25,7 @@ export function UserSidebar({ labels, isAdmin, isBusiness, adminLabel, businessL
     { href: "/settings", label: labels.settings, icon: "/figma/icon-settings-20.svg" },
   ];
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 hidden w-[240px] flex-col border-r border-line bg-surface p-4 lg:flex" aria-label="BEFAMOUS">
+    <aside data-user-sidebar className="fixed inset-y-0 left-0 z-30 hidden w-[240px] flex-col border-r border-line bg-surface p-4 lg:flex" aria-label="BEFAMOUS">
       <Link href="/home" className="mb-8 flex items-center gap-[10px] px-2 pt-2">
         <Logo size={32} />
         <span className="text-label text-text">BEFAMOUS</span>

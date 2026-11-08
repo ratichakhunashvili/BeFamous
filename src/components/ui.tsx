@@ -8,7 +8,7 @@ import { Logo } from "./logo";
 
 /** Phone-width column (390px, like the Figma frames), centred on larger screens. */
 export function Screen({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`relative mx-auto min-h-dvh w-full max-w-[390px] overflow-x-clip bg-bg lg:border-x lg:border-line ${className}`}>{children}</div>;
+  return <div className={`bf-screen relative mx-auto min-h-dvh w-full max-w-[390px] overflow-x-clip bg-bg ${className}`}>{children}</div>;
 }
 
 type BackTarget = string | "history";
@@ -150,18 +150,22 @@ export function ResultPanel({ icon, title, body, centerTitle = false, centerBody
 
 /** Fixed bottom action bar with one primary action (09, 10, 37). */
 export function StickyBar({ children }: { children: ReactNode }) {
-  return <div className="fixed inset-x-0 bottom-0 z-20 mx-auto w-full max-w-[390px] border-t border-line bg-surface px-5 pb-[14px] pt-[14px]">{children}</div>;
+  return (
+    <div className="bf-sticky fixed inset-x-0 bottom-0 z-20 mx-auto w-full max-w-[390px] border-t border-line bg-surface px-5 pb-[14px] pt-[14px]">
+      <div className="bf-sticky-inner">{children}</div>
+    </div>
+  );
 }
 
 /** Auth-style screen: purple curves behind, solid content panel starting 58px below the app bar. */
 export function CurvesBackdrop({ children, clearance = 0 }: { children: ReactNode; /** extra bottom space for a sticky bar / bottom nav */ clearance?: number }) {
   return (
-    <main className="relative min-h-[754px] pt-[58px]" style={{ paddingBottom: clearance }}>
+    <main className="bf-backdrop relative min-h-[754px] pt-[58px]" style={{ paddingBottom: clearance }}>
       {/* Fixed 390×754 like the Figma layer, so it never stretches with taller content. */}
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-[754px]" aria-hidden>
+      <div className="bf-curves pointer-events-none absolute inset-x-0 top-0 h-[754px]" aria-hidden>
         <Image src="/figma/bg-curves.png" alt="" fill sizes="390px" className="object-fill" priority />
       </div>
-      <div className="relative flex flex-col items-start gap-5 bg-bg p-5">{children}</div>
+      <div className="bf-content relative flex flex-col items-start gap-5 bg-bg p-5">{children}</div>
     </main>
   );
 }

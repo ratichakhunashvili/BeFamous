@@ -16,7 +16,7 @@ export function ChallengeCard({ c, size = "full", mediaHeight = 168 }: { c: Card
   const half = size === "half";
   return (
     <Link href={`/challenges/${c.slug}`} className={`flex flex-col gap-5 overflow-clip rounded-bf-16 border border-line bg-surface p-3 text-white transition-colors hover:bg-elevated/40 ${half ? "min-w-0 flex-1" : "w-full"}`}>
-      <div className="relative w-full overflow-clip rounded-bf-16 bg-elevated" style={{ height: half ? 104 : mediaHeight }}>
+      <div className="bf-card-media relative w-full overflow-clip rounded-bf-16 bg-elevated" style={{ height: half ? 104 : mediaHeight }}>
         {c.coverUrl ? (
           <Image src={c.coverUrl} alt="" fill sizes={half ? "145px" : "326px"} className="object-cover" />
         ) : (

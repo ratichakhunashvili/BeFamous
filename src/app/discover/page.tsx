@@ -120,7 +120,7 @@ function CardGrid({ cards }: { cards: (CardChallenge & { half: boolean })[] }) {
     const c = cards[i];
     if (c.half && cards[i + 1]?.half) {
       out.push(
-        <div key={c.slug} className="flex w-full gap-3">
+        <div key={c.slug} className="bf-card-pair flex w-full gap-3">
           <ChallengeCard c={c} size="half" />
           <ChallengeCard c={cards[i + 1]} size="half" />
         </div>,
@@ -130,5 +130,5 @@ function CardGrid({ cards }: { cards: (CardChallenge & { half: boolean })[] }) {
       out.push(<ChallengeCard key={c.slug} c={c} mediaHeight={i === 0 || !cards[i - 1]?.half ? 168 : 150} />);
     }
   }
-  return <>{out}</>;
+  return <div className="bf-card-grid flex w-full flex-col gap-5">{out}</div>;
 }

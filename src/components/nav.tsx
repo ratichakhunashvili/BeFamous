@@ -11,15 +11,15 @@ export async function TabTopBar() {
   const c = await getTranslations("common");
   const btn = "absolute top-[5px] flex size-11 items-center justify-center rounded-bf-12 bg-bg transition-colors hover:bg-surface";
   return (
-    <header className="relative z-10 h-[49px] w-full bg-bg">
+    <header className="bf-topbar relative z-10 h-[49px] w-full bg-bg">
       <Link href="/home" className="absolute left-5 top-[5px] flex h-11 w-[155px] items-center gap-[9px]">
         <Logo size={29} priority />
         <span className="text-label text-white">{c("brand")}</span>
       </Link>
-      <Link href="/discover/filters" aria-label={t("search")} className={`${btn} left-[286px]`}>
+      <Link href="/discover/filters" aria-label={t("search")} className={`${btn} bf-topbar-search left-[286px]`}>
         <Image src="/figma/icon-search.svg" alt="" width={20} height={20} className="size-5" />
       </Link>
-      <Link href="/notifications" aria-label={t("notifications")} className={`${btn} left-[334px]`}>
+      <Link href="/notifications" aria-label={t("notifications")} className={`${btn} bf-topbar-bell left-[334px]`}>
         <Image src="/figma/icon-bell.svg" alt="" width={20} height={20} className="size-5" />
       </Link>
     </header>
