@@ -37,4 +37,5 @@ In development, password-reset links are printed in the terminal instead of bein
 | `npm run db:seed` | Create or update the admin account |
 | `npm run backfill` | Give badges / vouchers for challenges completed before those rules existed |
 | `npm run dev:review -- approve` | Dev only: approve / `revision "note"` / `reject "note"` the latest submitted post (until the admin panel exists) |
+| `npm run dev:post -- found` | Dev only: put a post into a verification state and notify the user — `found` (59), `unavailable` (62), `metrics` (63), `refresh` (64), `expired` (61, TikTok account) |
 | `npm run typecheck` / `npm run lint` | Static checks |

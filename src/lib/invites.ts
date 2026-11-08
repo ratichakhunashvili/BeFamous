@@ -1,7 +1,7 @@
 // Invite codes (54): one per user, e.g. "NINO-BF26". A friend opens /i/NINO-BF26, signs up,
 // and the inviter gets a notification + their optional "invite a friend" mission.
 import "server-only";
-import { and, eq, inArray, isNull, ne, sql } from "drizzle-orm";
+import { and, eq, inArray, isNull, ne } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { completeMission } from "@/lib/progress";
 
@@ -61,10 +61,4 @@ export async function acceptInvite(tx: Tx, newUserId: string, code: string) {
     .from(schema.missions)
     .where(and(eq(schema.missions.type, "invite"), inArray(schema.missions.challengeId, joined.map((j) => j.challengeId))));
   for (const m of inviteMissions) await completeMission(tx, inviter.id, m.id);
-}
-
-/** How many friends signed up with this user's link. */
-export async function countInvited(userId: string) {
-  const [row] = await db.select({ n: sql<number>`count(*)::int` }).from(schema.users).where(eq(schema.users.invitedById, userId));
-  return row?.n ?? 0;
 }

@@ -14,7 +14,8 @@ export function HandleForm({ platform, missionId, defaultHandle, labels }: { pla
       <Field
         label={labels.label}
         name="handle"
-        defaultValue={defaultHandle}
+        key={state?.value ?? "initial"}
+        defaultValue={state?.value ?? defaultHandle}
         placeholder={labels.placeholder}
         autoComplete="username"
         autoCapitalize="none"

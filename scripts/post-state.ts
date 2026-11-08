@@ -32,9 +32,13 @@ async function main() {
 
   if (state === "found") {
     const joined = await db.select({ id: schema.participations.challengeId }).from(schema.participations).where(eq(schema.participations.userId, user.id));
-    const mission = joined.length
-      ? await db.query.missions.findFirst({ where: and(eq(schema.missions.type, "upload"), inArray(schema.missions.challengeId, joined.map((j) => j.id))) })
-      : undefined;
+    const candidates = joined.length
+      ? await db.select().from(schema.missions).where(and(eq(schema.missions.type, "upload"), inArray(schema.missions.challengeId, joined.map((j) => j.id))))
+      : [];
+    const done = new Set(
+      (await db.select().from(schema.missionProgress).where(eq(schema.missionProgress.userId, user.id))).filter((p) => p.status === "completed").map((p) => p.missionId),
+    );
+    const mission = candidates.find((m) => !done.has(m.id)) ?? candidates[0]; // prefer a mission still open
     if (!mission) throw new Error("User has not joined a challenge with a post mission");
     const challenge = await db.query.challenges.findFirst({ where: eq(schema.challenges.id, mission.challengeId) });
     const [post] = await db

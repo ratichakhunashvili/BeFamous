@@ -89,7 +89,7 @@ export default async function DiscoverPage({ searchParams }: PageProps<"/discove
 
         <CardGrid cards={cards} />
 
-        {filtered && (
+        {filtered && cards.length > 0 && (
           <ButtonLink href="/discover" variant="secondary">
             {t("clear")}
           </ButtonLink>

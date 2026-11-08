@@ -17,3 +17,11 @@ export function validUntil(d: Date, locale: Locale) {
   const month = Number(parts.find((p) => p.type === "month")?.value) - 1;
   return `მოქმედია ${day} ${untilKa[month]}`;
 }
+
+// Georgian number words for small counts, as Figma writes them ("ხუთი კოლექცია" on 25).
+const kaWords = ["ნული", "ერთი", "ორი", "სამი", "ოთხი", "ხუთი", "ექვსი", "შვიდი", "რვა", "ცხრა", "ათი"];
+
+/** "ხუთი" for 5 in Georgian (up to 10), digits otherwise / in English. */
+export function countWord(n: number, locale: Locale) {
+  return locale === "ka" && n >= 0 && n <= 10 ? kaWords[n] : String(n);
+}

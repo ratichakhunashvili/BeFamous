@@ -2,7 +2,7 @@
 import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { AppBar, ButtonLink, CurvesBackdrop, InfoRow, PageTitle, Screen } from "@/components/ui";
-import { countInvited, getOrCreateInviteCode } from "@/lib/invites";
+import { getOrCreateInviteCode } from "@/lib/invites";
 import { getMissionContext } from "@/lib/queries";
 import { requireUser } from "@/lib/session";
 import { InviteActions } from "./invite-actions";
@@ -18,7 +18,7 @@ export default async function InvitePage({ searchParams }: PageProps<"/invite">)
   const backHref = ctx ? `/challenges/${ctx.challenge.slug}/missions` : "/profile";
   const copiedHref = ctx ? `/invite/copied?mission=${ctx.mission.id}` : "/invite/copied";
 
-  const [code, invited] = await Promise.all([getOrCreateInviteCode(user.id, user.name ?? ""), countInvited(user.id)]);
+  const code = await getOrCreateInviteCode(user.id, user.name ?? "");
   const h = await headers();
   const origin = process.env.APP_URL ?? `${h.get("x-forwarded-proto") ?? "http"}://${h.get("host")}`;
   const link = `${origin}/i/${code}`;
@@ -38,7 +38,7 @@ export default async function InvitePage({ searchParams }: PageProps<"/invite">)
             href={ctx ? `/challenges/${ctx.challenge.slug}/rules` : undefined}
             layout="centered"
             icon="/figma/icon-team.svg"
-            chevron={ctx ? "/figma/icon-chevron.svg" : undefined} title={t("how")} body={`${t("howBody")}\n${t("invited", { count: invited })}`} />
+            chevron={ctx ? "/figma/icon-chevron.svg" : undefined} title={t("how")} body={t("howBody")} />
         </InviteActions>
         <ButtonLink href={backHref} variant="secondary">
           {t("notNow")}

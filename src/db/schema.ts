@@ -173,6 +173,7 @@ export const missionProgress = pgTable(
     missionId: uuid("mission_id").notNull().references(() => missions.id, { onDelete: "cascade" }),
     status: progressStatusEnum("status").notNull().default("not_started"),
     completedAt: timestamp("completed_at", { withTimezone: true }),
+    // Stored in the "created_at" column since Phase 1 (works as "last changed"); renaming needs a migration.
     updatedAt: createdAt(),
   },
   (t) => [uniqueIndex("mission_progress_user_mission_idx").on(t.userId, t.missionId)],
@@ -399,7 +400,7 @@ export const socialPosts = pgTable("social_posts", {
   metricsSource: text("metrics_source"), // where the numbers came from (e.g. "admin")
   lastSyncedAt: timestamp("last_synced_at", { withTimezone: true }), // last successful metrics update (64)
   reviewerId: uuid("reviewer_id").references(() => users.id, { onDelete: "set null" }),
-  updatedAt: createdAt(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
   createdAt: createdAt(),
 });
 

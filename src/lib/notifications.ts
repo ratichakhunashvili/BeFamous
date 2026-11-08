@@ -85,7 +85,7 @@ export async function getNotificationCards(userId: string, locale: Locale): Prom
       : [],
     levelIds.length ? db.select().from(schema.badgeLevels).where(inArray(schema.badgeLevels.id, levelIds)) : [],
     challengeIds.length ? db.select().from(schema.challenges).where(inArray(schema.challenges.id, challengeIds)) : [],
-    inviteeIds.length ? db.select({ id: schema.users.id, name: schema.users.name }).from(schema.users).where(inArray(schema.users.id, inviteeIds)) : [],
+    inviteeIds.length ? db.select({ id: schema.users.id, name: schema.users.name, deletedAt: schema.users.deletedAt }).from(schema.users).where(inArray(schema.users.id, inviteeIds)) : [],
   ]);
 
   return rows.map((r) => {
@@ -103,7 +103,8 @@ export async function getNotificationCards(userId: string, locale: Locale): Prom
       case "submission_approved":
         icon = "/figma/icon-check.svg";
         title = t("approved");
-        detail = sub ? `+${sub.xp} XP` : (challengeTitle ?? "");
+        // Same figure as 17 / 16: the mission's XP plus the challenge XP its approval unlocks.
+        detail = sub ? `+${sub.xp + sub.challenge.xpReward} XP` : (challengeTitle ?? "");
         break;
       case "submission_revision":
         title = sub?.note?.startsWith("missing:") ? t("hashtagMissing") : t("revision");
@@ -138,7 +139,10 @@ export async function getNotificationCards(userId: string, locale: Locale): Prom
       case "invite_accepted":
         icon = "/figma/icon-team.svg";
         title = t("inviteAccepted");
-        detail = invitees.find((x) => x.id === str(data, "inviteeId"))?.name ?? "";
+        {
+          const friend = invitees.find((x) => x.id === str(data, "inviteeId"));
+          detail = friend && !friend.deletedAt ? friend.name : ""; // deleted accounts have no name to show
+        }
         break;
       case "post_found":
         icon = "/figma/icon-search.svg";

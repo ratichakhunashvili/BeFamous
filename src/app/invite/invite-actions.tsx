@@ -3,7 +3,7 @@
 // Both continue to 55 once the code/link is on the clipboard or shared.
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 import { Button } from "@/components/ui";
 
 type Labels = { code: string; codeBody: string; share: string; shareText: string };
@@ -13,15 +13,32 @@ async function copy(text: string) {
     await navigator.clipboard.writeText(text);
     return true;
   } catch {
-    return false;
+    // Older / restricted browsers: copy through a hidden text field.
+    const el = document.createElement("textarea");
+    el.value = text;
+    el.setAttribute("readonly", "");
+    el.style.position = "fixed";
+    el.style.opacity = "0";
+    document.body.appendChild(el);
+    el.select();
+    let ok = false;
+    try {
+      ok = document.execCommand("copy");
+    } catch {
+      ok = false;
+    }
+    el.remove();
+    return ok;
   }
 }
 
 export function InviteActions({ code, link, copiedHref, labels, children }: { code: string; link: string; copiedHref: string; labels: Labels; children: ReactNode }) {
   const router = useRouter();
+  const [manual, setManual] = useState<string | null>(null); // copying was blocked: show the text to copy by hand
 
   const copyCode = async () => {
     if (await copy(code)) router.push(copiedHref);
+    else setManual(code);
   };
 
   const share = async () => {
@@ -35,6 +52,7 @@ export function InviteActions({ code, link, copiedHref, labels, children }: { co
       }
     }
     if (await copy(link)) router.push(copiedHref);
+    else setManual(link);
   };
 
   return (
@@ -53,6 +71,11 @@ export function InviteActions({ code, link, copiedHref, labels, children }: { co
       <Button type="button" onClick={share}>
         {labels.share}
       </Button>
+      {manual && (
+        <p role="status" className="w-full select-all break-all rounded-bf-12 border border-line bg-surface p-3 text-center text-caption text-white">
+          {manual}
+        </p>
+      )}
     </>
   );
 }
