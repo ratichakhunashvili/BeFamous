@@ -11,6 +11,7 @@ import { z } from "zod";
 import { signIn, signOut } from "@/auth";
 import { db, schema } from "@/db";
 import { acceptInvite, INVITE_COOKIE, isInviteCode } from "@/lib/invites";
+import { allowReset, allowSignin, allowSignup } from "@/lib/rate-limit";
 
 export type FormState = { error?: string; fieldErrors?: Record<string, string>; values?: Record<string, string> } | undefined;
 
@@ -31,6 +32,7 @@ export async function signupAction(_prev: FormState, form: FormData): Promise<Fo
     return { fieldErrors, values };
   }
 
+  if (!(await allowSignup())) return { fieldErrors: { email: "limited" }, values };
   const passwordHash = await bcrypt.hash(parsed.data.password, 12);
   const inserted = await db
     .insert(schema.users)
@@ -55,6 +57,7 @@ export async function signupAction(_prev: FormState, form: FormData): Promise<Fo
 // ---- 03 Sign in ----
 export async function signinAction(_prev: FormState, form: FormData): Promise<FormState> {
   const values = { email: String(form.get("email") ?? "") };
+  if (!(await allowSignin(values.email.trim().toLowerCase()))) return { error: "limited", values };
   try {
     await signIn("credentials", { email: values.email, password: String(form.get("password") ?? ""), redirect: false });
   } catch (e) {
@@ -74,6 +77,7 @@ export async function signoutAction() {
 // ---- 29 Request password reset ----
 /** Creates a 1-hour reset link for an existing account (dev: printed in the server terminal). */
 async function issueResetLink(address: string) {
+  if (!(await allowReset(address))) return; // too many requests: same screen, no new email
   const user = await db.query.users.findFirst({ where: and(eq(schema.users.email, address), isNull(schema.users.deletedAt)) });
   if (!user) return;
   const token = randomBytes(32).toString("base64url");
@@ -113,6 +117,7 @@ export async function adminSigninAction(_prev: FormState, form: FormData): Promi
   const values = { email: String(form.get("email") ?? "") };
   const address = values.email.trim().toLowerCase();
   const password = String(form.get("password") ?? "");
+  if (!(await allowSignin(address))) return { error: "limited", values };
   const user = await db.query.users.findFirst({ where: eq(schema.users.email, address), columns: { role: true, locale: true } });
   // Non-admins get the same error as a wrong password, so this screen doesn't reveal who is an admin.
   if (user?.role !== "admin") {

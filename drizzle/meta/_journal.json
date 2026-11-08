@@ -64,6 +64,13 @@
       "when": 1794123827037,
       "tag": "0008_challenge_winners",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794130034313,
+      "tag": "0009_rate_limits",
+      "breakpoints": true
     }
   ]
 }

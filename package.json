@@ -13,7 +13,9 @@
     "typecheck": "tsc --noEmit",
     "dev:review": "tsx --conditions=react-server scripts/review.ts",
     "backfill": "tsx --conditions=react-server scripts/backfill-rewards.ts",
-    "dev:post": "tsx --conditions=react-server scripts/post-state.ts"
+    "dev:post": "tsx --conditions=react-server scripts/post-state.ts",
+    "test": "tsx --conditions=react-server --test tests/rules.test.mts",
+    "test:db": "tsx --conditions=react-server --test tests/db.test.mts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1164.0",

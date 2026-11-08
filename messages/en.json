@@ -32,7 +32,8 @@
     "body": "Sign in and continue your challenges.",
     "forgot": "Forgot password?",
     "invalid": "Email or password is incorrect.",
-    "resetDone": "Password changed. Sign in with your new password."
+    "resetDone": "Password changed. Sign in with your new password.",
+    "limited": "Too many attempts. Try again in 15 minutes."
   },
   "signup": {
     "eyebrow": "02 / New account",
@@ -46,7 +47,8 @@
       "name": "Enter your name.",
       "email": "Enter a valid email.",
       "password": "Password must be at least 8 characters.",
-      "taken": "An account with this email already exists."
+      "taken": "An account with this email already exists.",
+      "limited": "Too many sign-ups from this network. Try again later."
     }
   },
   "reset": {
@@ -602,7 +604,8 @@
       "backToSignin": "Back to sign in",
       "sentTitle": "Check your email",
       "sentBody": "A reset link was sent to {email}.",
-      "resend": "Send again"
+      "resend": "Send again",
+      "limited": "Too many attempts. Try again in 15 minutes."
     },
     "participants": {
       "eyebrow": "Campaigns  /  Participants",

@@ -15,7 +15,7 @@ export function SigninForm() {
       <Field label={c("password")} name="password" type="password" autoComplete="current-password" required icon="/figma/icon-lock.svg" placeholder="••••••••" />
       {state?.error && (
         <p role="alert" className="-mt-2 text-caption text-chart">
-          {t("invalid")}
+          {state.error === "limited" ? t("limited") : t("invalid")}
         </p>
       )}
       <Button type="submit" disabled={pending}>

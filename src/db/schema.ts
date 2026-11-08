@@ -423,6 +423,13 @@ export const challengeWinners = pgTable(
   (t) => [uniqueIndex("challenge_winners_category_idx").on(t.challengeId, t.category)],
 );
 
+// Attempt counters for sign-in / sign-up / password reset (one row per key per time window).
+export const rateLimits = pgTable("rate_limits", {
+  key: text("key").primaryKey(), // e.g. "signin:email:a@b.c" or "signin:ip:1.2.3.4"
+  count: integer("count").notNull().default(0),
+  windowStart: timestamp("window_start", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const auditLog = pgTable("audit_log", {
   id: id(),
   actorId: uuid("actor_id").references(() => users.id, { onDelete: "set null" }),

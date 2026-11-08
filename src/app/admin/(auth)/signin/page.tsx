@@ -18,7 +18,7 @@ export default async function AdminSigninPage() {
         <p className="text-body text-muted">{t("signinBody")}</p>
       </div>
       <AdminSigninForm
-        labels={{ email: t("email"), password: t("password"), submit: t("signin"), reset: t("forgot"), invalid: t("invalid") }}
+        labels={{ email: t("email"), password: t("password"), submit: t("signin"), reset: t("forgot"), invalid: t("invalid"), limited: t("limited") }}
       />
     </AdminAuthShell>
   );
