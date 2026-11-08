@@ -2,6 +2,7 @@
 // (no uploaded video), so the Figma "file / duration / format" rows become link, account, caption and
 // hashtag check. Below the review: post monitoring (metrics, deleted/private, account expired) for 61–64.
 import Image from "next/image";
+import { CoverArt } from "@/components/cover-art";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { approveSubmissionAction, flagAccountExpiredAction, saveMetricsAction, setPostStateAction } from "@/app/actions/admin-review";
@@ -68,14 +69,7 @@ export default async function ReviewPage({ params }: PageProps<"/admin/participa
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={sub.thumbnailUrl} alt="" className="absolute inset-0 size-full object-contain" />
               ) : (
-                <>
-                  <span className="absolute -top-[52px] left-[446px] h-[369px] w-[415px] rounded-full bg-surface" />
-                  <span className="absolute left-4 top-4 flex size-[62px] items-center justify-center rounded-bf-16 bg-bg">
-                    <Image src="/figma/admin/icon-coffee-32.svg" alt="" width={32} height={32} className="size-8" />
-                  </span>
-                  <p className="absolute left-4 top-[266px] text-caption text-muted">{art?.kicker ?? "BEFAMOUS"}</p>
-                  <p className="absolute left-4 top-[286px] text-h3 text-text">{art?.label ?? tr(challenge, "title", locale)}</p>
-                </>
+                <CoverArt art={art ? { icon: art.icon ?? "camera", kicker: art.kicker ?? "BEFAMOUS", label: art.label ?? tr(challenge, "title", locale) } : null} size="lg" />
               )}
             </div>
             <Row label={t("link")}>

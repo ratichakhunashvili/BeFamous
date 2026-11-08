@@ -1,5 +1,6 @@
 // 09 გამოწვევის დეტალი — Figma 87:6909 (same template for 34/35/36 with their data)
 import Image from "next/image";
+import { CoverArt } from "@/components/cover-art";
 import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { AppBar, ButtonLink, CurvesBackdrop, InfoRow, Panel, Screen, StickyBar } from "@/components/ui";
@@ -30,14 +31,7 @@ export default async function ChallengePage({ params }: PageProps<"/challenges/[
           {hero ? (
             <Image src={hero} alt="" fill sizes="350px" className="object-cover" priority />
           ) : challenge.coverArt ? (
-            <>
-              <span className="absolute left-[199.85px] top-[-32.64px] h-[232.56px] w-[227.5px] rounded-full bg-surface" />
-              <span className="absolute left-4 top-4 flex size-[62px] items-center justify-center rounded-bf-16 bg-bg">
-                <Image src="/figma/icon-tech-32.svg" alt="" width={32} height={32} className="size-8" />
-              </span>
-              <span className="absolute left-4 top-[146px] text-caption text-white">{challenge.coverArt.kicker}</span>
-              <span className="absolute left-4 top-[166px] text-h3 text-white">{challenge.coverArt.label}</span>
-            </>
+            <CoverArt art={challenge.coverArt} size="lg" />
           ) : null}
         </div>
 
