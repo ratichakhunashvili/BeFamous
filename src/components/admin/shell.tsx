@@ -107,7 +107,7 @@ export function AdminTable({ columns, rows, widths }: { columns: string[]; width
         const inner = (
           <>
             {r.cells.map((cell, i) => (
-              <span key={i} className={`min-w-0 truncate ${i === 0 ? "text-label text-text" : "text-body text-muted"}`}>
+              <span key={i} className={`min-w-0 ${typeof cell === "string" ? "truncate" : ""} ${i === 0 ? "text-label text-text" : "text-body text-muted"}`}>
                 {cell}
               </span>
             ))}

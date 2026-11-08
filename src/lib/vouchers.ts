@@ -14,3 +14,12 @@ export async function getMyVoucher(userId: string, voucherId: string) {
   const expired = row.voucher.status === "issued" && row.voucher.expiresAt != null && row.voucher.expiresAt < new Date();
   return { ...row, expired };
 }
+
+/** Staff may type "bf-50-ab2c" or paste "BF–50–AB2C": compare in one normalised form (en dashes, upper case). */
+export function normaliseVoucherCode(raw: string) {
+  return raw
+    .trim()
+    .toUpperCase()
+    .replace(/\s+/g, "")
+    .replace(/[-‐‑‒—―−]/g, "–");
+}
