@@ -41,7 +41,7 @@ export async function BottomNav({ active, variant = "float" }: { active: NavTab;
 
   if (variant === "flat") {
     return (
-      <nav className="fixed inset-x-0 bottom-0 z-20 mx-auto h-[76px] w-full max-w-[390px] border-t border-line bg-surface">
+      <nav className="fixed inset-x-0 bottom-0 z-20 mx-auto h-[76px] lg:hidden w-full max-w-[390px] border-t border-line bg-surface">
         <ul className="flex h-full items-start gap-1 px-1 pt-[5px]">
           {tabs.map((tab) => {
             const on = tab.key === active;
@@ -61,7 +61,7 @@ export async function BottomNav({ active, variant = "float" }: { active: NavTab;
   }
 
   return (
-    <nav className="fixed inset-x-0 bottom-3 z-20 mx-auto w-[calc(100%-31.2px)] max-w-[358.8px] rounded-[20px] border border-[#45475c] bg-surface shadow-[0_5px_8px_rgba(13,10,31,0.32)]">
+    <nav className="fixed inset-x-0 bottom-3 z-20 mx-auto w-[calc(100%-31.2px)] lg:hidden max-w-[358.8px] rounded-[20px] border border-[#45475c] bg-surface shadow-[0_5px_8px_rgba(13,10,31,0.32)]">
       <ul className="flex h-[69.92px] items-start gap-[3.68px] px-[2.68px] pt-[3.6px]">
         {tabs.map((tab) => {
           const on = tab.key === active;

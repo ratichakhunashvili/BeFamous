@@ -1132,5 +1132,11 @@
       "empty": "No creators match this filter.",
       "backHome": "Back to workspace"
     }
+  },
+  "desktopNav": {
+    "badges": "Badges",
+    "settings": "Settings",
+    "invite": "Invite a friend",
+    "admin": "Admin panel"
   }
 }

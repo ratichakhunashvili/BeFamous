@@ -8,7 +8,7 @@ import { Logo } from "./logo";
 
 /** Phone-width column (390px, like the Figma frames), centred on larger screens. */
 export function Screen({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`relative mx-auto min-h-dvh w-full max-w-[390px] overflow-x-clip bg-bg ${className}`}>{children}</div>;
+  return <div className={`relative mx-auto min-h-dvh w-full max-w-[390px] overflow-x-clip bg-bg lg:border-x lg:border-line ${className}`}>{children}</div>;
 }
 
 type BackTarget = string | "history";
