@@ -41,3 +41,13 @@ In development, password-reset links are printed in the terminal instead of bein
 | `npm run test:db` | Database tests (decide-once, no double XP, reward once, rate limit) — run only against `TEST_DATABASE_URL` (Neon branch "tests"), skipped if it is not set |
 | `npm run dev:post -- found` | Dev only: put a post into a verification state and notify the user — `found` (59), `unavailable` (62), `metrics` (63), `refresh` (64), `expired` (61, TikTok account) |
 | `npm run typecheck` / `npm run lint` | Static checks |
+
+## Deployment (Vercel)
+
+Live: https://befamous-six.vercel.app (project `befamous`, functions in `fra1` next to Neon Frankfurt — see `vercel.json`).
+
+- Deploy: `npx vercel deploy --prod`
+- Environment variables on Vercel (production + preview): `DATABASE_URL`, `AUTH_SECRET`, `AUTH_TRUST_HOST`, `S3_ENDPOINT`, `S3_REGION`, `S3_BUCKET`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`. Admin/test passwords and `TEST_DATABASE_URL` stay local only.
+- Optional `APP_URL` (e.g. a custom domain) makes invite and reset links use that address.
+- Database migrations are run from your machine (`npm run db:migrate`), not during the build.
+- New domain? Add it to storage CORS: `npx tsx scripts/storage-cors.ts <origins>`.
