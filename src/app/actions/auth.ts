@@ -72,26 +72,61 @@ export async function signoutAction() {
 }
 
 // ---- 29 Request password reset ----
+/** Creates a 1-hour reset link for an existing account (dev: printed in the server terminal). */
+async function issueResetLink(address: string) {
+  const user = await db.query.users.findFirst({ where: and(eq(schema.users.email, address), isNull(schema.users.deletedAt)) });
+  if (!user) return;
+  const token = randomBytes(32).toString("base64url");
+  await db.insert(schema.passwordResetTokens).values({
+    userId: user.id,
+    tokenHash: sha256(token),
+    expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
+  });
+  const h = await headers();
+  const origin = process.env.APP_URL ?? `${h.get("x-forwarded-proto") ?? "http"}://${h.get("host")}`;
+  const link = `${origin}/reset/${token}`;
+  // Development: no email service yet, so the link is printed in the server terminal.
+  console.log(`
+[password reset] ${address}
+${link}
+`);
+}
+
 export async function requestResetAction(_prev: FormState, form: FormData): Promise<FormState> {
   const parsed = email.safeParse(form.get("email"));
   if (!parsed.success) return { fieldErrors: { email: "email" }, values: { email: String(form.get("email") ?? "") } };
-
-  const user = await db.query.users.findFirst({ where: and(eq(schema.users.email, parsed.data), isNull(schema.users.deletedAt)) });
-  if (user) {
-    const token = randomBytes(32).toString("base64url");
-    await db.insert(schema.passwordResetTokens).values({
-      userId: user.id,
-      tokenHash: sha256(token),
-      expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
-    });
-    const h = await headers();
-    const origin = process.env.APP_URL ?? `${h.get("x-forwarded-proto") ?? "http"}://${h.get("host")}`;
-    const link = `${origin}/reset/${token}`;
-    // Development: no email service yet, so the link is printed in the server terminal.
-    console.log(`\n[password reset] ${parsed.data}\n${link}\n`);
-  }
+  await issueResetLink(parsed.data);
   // Same response whether or not the account exists, so nobody can probe which emails are registered.
   redirect(`/reset/sent?email=${encodeURIComponent(parsed.data)}`);
+}
+
+// ---- Admin 25 → 26: same reset link, admin-styled screens ----
+export async function adminRequestResetAction(_prev: FormState, form: FormData): Promise<FormState> {
+  const parsed = email.safeParse(form.get("email"));
+  if (!parsed.success) return { fieldErrors: { email: "email" }, values: { email: String(form.get("email") ?? "") } };
+  await issueResetLink(parsed.data);
+  redirect(`/admin/reset/sent?email=${encodeURIComponent(parsed.data)}`);
+}
+
+// ---- Admin 01: sign in (admins only) ----
+export async function adminSigninAction(_prev: FormState, form: FormData): Promise<FormState> {
+  const values = { email: String(form.get("email") ?? "") };
+  const address = values.email.trim().toLowerCase();
+  const password = String(form.get("password") ?? "");
+  const user = await db.query.users.findFirst({ where: eq(schema.users.email, address), columns: { role: true, locale: true } });
+  // Non-admins get the same error as a wrong password, so this screen doesn't reveal who is an admin.
+  if (user?.role !== "admin") {
+    await bcrypt.compare(password, "$2a$12$invalidinvalidinvalidinvalidinvalidinvalidinvalidinv");
+    return { error: "invalid", values };
+  }
+  try {
+    await signIn("credentials", { email: address, password, redirect: false });
+  } catch (e) {
+    if (e instanceof AuthError) return { error: "invalid", values };
+    throw e;
+  }
+  (await cookies()).set("locale", user.locale, { path: "/", maxAge: 60 * 60 * 24 * 365, sameSite: "lax", httpOnly: true });
+  redirect("/admin");
 }
 
 // ---- Set new password (from the emailed link) ----

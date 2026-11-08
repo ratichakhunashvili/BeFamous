@@ -14,3 +14,11 @@ export async function requireAdmin() {
   if (user.role !== "admin") redirect("/");
   return user;
 }
+
+/** For admin pages: signed-out visitors go to the admin sign-in (01), non-admins to the user app. */
+export async function requireAdminPage() {
+  const session = await auth();
+  if (!session?.user) redirect("/admin/signin");
+  if (session.user.role !== "admin") redirect("/home");
+  return session.user;
+}

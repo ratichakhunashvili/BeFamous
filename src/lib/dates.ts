@@ -25,3 +25,11 @@ const kaWords = ["ნული", "ერთი", "ორი", "სამი", "�
 export function countWord(n: number, locale: Locale) {
   return locale === "ka" && n >= 0 && n <= 10 ? kaWords[n] : String(n);
 }
+
+const tbilisiDay = (d: Date) => new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tbilisi", year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
+
+/** Whole calendar days (Tbilisi) between d and now: 0 = today, 1 = yesterday. */
+export function daysAgo(d: Date, now = new Date()) {
+  const ms = (x: string) => Date.UTC(Number(x.slice(0, 4)), Number(x.slice(5, 7)) - 1, Number(x.slice(8, 10)));
+  return Math.round((ms(tbilisiDay(now)) - ms(tbilisiDay(d))) / 86_400_000);
+}

@@ -41,7 +41,7 @@ export async function listChallenges(opts: { interestSlugs?: string[]; q?: strin
 
 export async function getChallengeBySlug(slug: string) {
   const challenge = await db.query.challenges.findFirst({ where: eq(challenges.slug, slug) });
-  if (!challenge) return null;
+  if (!challenge || challenge.status === "draft") return null; // drafts exist only in the admin
   const [{ value: participants }] = await db.select({ value: count() }).from(participations).where(eq(participations.challengeId, challenge.id));
   const levels = await db.select().from(challengeLevels).where(eq(challengeLevels.challengeId, challenge.id)).orderBy(asc(challengeLevels.position));
   const missionRows = await db.select().from(missions).where(eq(missions.challengeId, challenge.id)).orderBy(asc(missions.position));

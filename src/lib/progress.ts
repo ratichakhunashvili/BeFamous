@@ -188,9 +188,14 @@ export async function trackSocialPost(tx: Tx, sub: { id: string; userId: string;
 /** Admin decision on a submitted post. */
 export async function reviewSubmission(submissionId: string, reviewerId: string | null, decision: "approved" | "revision" | "rejected", note?: string) {
   return db.transaction(async (tx) => {
-    const sub = await tx.query.submissions.findFirst({ where: eq(submissions.id, submissionId) });
-    if (!sub) throw new Error("Submission not found");
-    await tx.update(submissions).set({ status: decision, reviewerId, reviewNote: note ?? null, reviewedAt: new Date() }).where(eq(submissions.id, submissionId));
+    // Only a pending submission can be decided, and only once (two admins / double click can't both apply).
+    const [sub] = await tx
+      .update(submissions)
+      .set({ status: decision, reviewerId, reviewNote: note ?? null, reviewedAt: new Date() })
+      .where(and(eq(submissions.id, submissionId), eq(submissions.status, "pending")))
+      .returning();
+    if (!sub) return false;
+    await tx.insert(schema.auditLog).values({ actorId: reviewerId, action: `submission.${decision}`, target: submissionId, data: note ? { note } : null });
 
     if (decision === "approved") {
       await completeMission(tx, sub.userId, sub.missionId);
@@ -200,5 +205,6 @@ export async function reviewSubmission(submissionId: string, reviewerId: string 
       await setMissionStatus(tx, sub.userId, sub.missionId, "in_progress");
       await tx.insert(notifications).values({ userId: sub.userId, kind: decision === "revision" ? "submission_revision" : "submission_rejected", data: { submissionId, note } });
     }
+    return true;
   });
 }

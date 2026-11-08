@@ -30,6 +30,7 @@
   --color-line: var(--bf-border);
   --color-chart: var(--bf-chart);
   --color-action: var(--bf-action);
+  --color-on-primary: var(--bf-on-primary);
   --font-sans: var(--font-noto-georgian), system-ui, sans-serif;
   --radius-bf-8: 8px;
   --radius-bf-12: 12px;
