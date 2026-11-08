@@ -90,6 +90,7 @@ body {
     width: auto;
   }
   body:has(aside[data-user-sidebar]) .bf-curves { display: none; }
+  body:has(aside[data-user-sidebar]) .bf-topbar-logo { display: none; }
   body:has(aside[data-user-sidebar]) .bf-backdrop { padding-top: 8px; min-height: 0; }
   body:has(aside[data-user-sidebar]) .bf-content {
     max-width: none;
@@ -114,6 +115,7 @@ body {
   body:has(aside[data-user-sidebar]) .bf-home-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 250px));
+    justify-content: center;
     gap: 20px;
   }
   body:has(aside[data-user-sidebar]) .bf-home { padding: 24px 32px 40px; }

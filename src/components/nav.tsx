@@ -12,7 +12,7 @@ export async function TabTopBar() {
   const btn = "absolute top-[5px] flex size-11 items-center justify-center rounded-bf-12 bg-bg transition-colors hover:bg-surface";
   return (
     <header className="bf-topbar relative z-10 h-[49px] w-full bg-bg">
-      <Link href="/home" className="absolute left-5 top-[5px] flex h-11 w-[155px] items-center gap-[9px]">
+      <Link href="/home" className="bf-topbar-logo absolute left-5 top-[5px] flex h-11 w-[155px] items-center gap-[9px]">
         <Logo size={29} priority />
         <span className="text-label text-white">{c("brand")}</span>
       </Link>
