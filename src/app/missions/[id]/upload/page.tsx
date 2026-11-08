@@ -22,7 +22,7 @@ export default async function RegisterPostPage({ params }: PageProps<"/missions/
       <AppBar back={`/challenges/${ctx.challenge.slug}/missions`} brandLabel={c("brand")} />
       <CurvesBackdrop>
         <PageTitle eyebrow={t("eyebrow", { n: ctx.number })} title={t("title")} body={t("body")} />
-        <InfoRow href="/accounts/connect" layout="centered" icon="/figma/icon-upload-20.svg" chevron="/figma/icon-chevron.svg" title={t("connectTitle")} body={t("connectBody")} />
+        <InfoRow href={`/accounts/connect?mission=${id}`} layout="centered" icon="/figma/icon-upload-20.svg" chevron="/figma/icon-chevron.svg" title={t("connectTitle")} body={t("connectBody")} />
         <PostLinkForm
           missionId={id}
           labels={{

@@ -49,7 +49,7 @@ export default async function ActivityPage() {
     }
     if (c.kind === "video") {
       const tag = (c.hashtags ?? "").split(/\s+/).at(-1) ?? "";
-      return { c, icon: "/figma/icon-clock-20.svg", status: `${t("waitingPost")} · ${t("hashtag", { tag })}`, href: `/challenges/${c.slug}/missions` };
+      return { c, icon: "/figma/icon-clock-20.svg", status: `${t("waitingPost")} · ${t("hashtag", { tag })}`, href: `/challenges/${c.slug}/post` };
     }
     return { c, icon: category, status: `${t("inProgress")} · ${t("missions")}`, href: `/challenges/${c.slug}/missions` };
   });

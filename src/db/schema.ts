@@ -14,6 +14,7 @@ import {
   index,
   jsonb,
   doublePrecision,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 
 const id = () => uuid("id").primaryKey().defaultRandom();
@@ -40,6 +41,8 @@ export const users = pgTable(
     // Bumped on password reset / logout-everywhere so old sessions stop working.
     sessionVersion: integer("session_version").notNull().default(0),
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
+    // Who invited this user (54 invite link → sign-up).
+    invitedById: uuid("invited_by_id").references((): AnyPgColumn => users.id, { onDelete: "set null" }),
     createdAt: createdAt(),
   },
   (t) => [uniqueIndex("users_email_idx").on(t.email)],
@@ -336,14 +339,20 @@ export const notifications = pgTable(
   (t) => [index("notifications_user_idx").on(t.userId)],
 );
 
-export const invites = pgTable("invites", {
-  id: id(),
-  inviterId: uuid("inviter_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-  code: text("code").notNull().unique(),
-  inviteeId: uuid("invitee_id").references(() => users.id, { onDelete: "set null" }),
-  acceptedAt: timestamp("accepted_at", { withTimezone: true }),
-  createdAt: createdAt(),
-});
+// One invite code per user (54). Accepted invites are recorded on users.invitedById.
+// inviteeId/acceptedAt are legacy columns kept so the migration only adds.
+export const invites = pgTable(
+  "invites",
+  {
+    id: id(),
+    inviterId: uuid("inviter_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    code: text("code").notNull().unique(),
+    inviteeId: uuid("invitee_id").references(() => users.id, { onDelete: "set null" }),
+    acceptedAt: timestamp("accepted_at", { withTimezone: true }),
+    createdAt: createdAt(),
+  },
+  (t) => [uniqueIndex("invites_inviter_idx").on(t.inviterId)],
+);
 
 // ---------- Social accounts & post verification (admin-verified) ----------
 export const socialPlatformEnum = pgEnum("social_platform", ["instagram", "tiktok", "facebook", "youtube"]);
@@ -370,6 +379,7 @@ export const postStatusEnum = pgEnum("post_status", [
   "unavailable", // 62
   "metrics_unavailable", // 63
   "refresh_failed", // 64
+  "dismissed", // 59 "ჩემი არ არის" — the user said a found post is not theirs
 ]);
 
 export const socialPosts = pgTable("social_posts", {
@@ -377,9 +387,17 @@ export const socialPosts = pgTable("social_posts", {
   userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   missionId: uuid("mission_id").notNull().references(() => missions.id, { onDelete: "cascade" }),
   accountId: uuid("account_id").references(() => linkedSocialAccounts.id, { onDelete: "set null" }),
+  // The submission this post was registered as (13 → 41), when it came from the user.
+  submissionId: uuid("submission_id").references(() => submissions.id, { onDelete: "set null" }),
+  platform: text("platform"), // "tiktok" | "instagram"
+  title: text("title"), // short label shown on 57 (caption start or admin-entered)
+  caption: text("caption"),
+  publishedAt: timestamp("published_at", { withTimezone: true }),
   url: text("url").notNull(),
   status: postStatusEnum("status").notNull().default("waiting"),
-  metrics: jsonb("metrics"), // { views, likes, comments } entered by admin
+  metrics: jsonb("metrics"), // { views, likes, comments } entered by admin; null = unknown, never 0
+  metricsSource: text("metrics_source"), // where the numbers came from (e.g. "admin")
+  lastSyncedAt: timestamp("last_synced_at", { withTimezone: true }), // last successful metrics update (64)
   reviewerId: uuid("reviewer_id").references(() => users.id, { onDelete: "set null" }),
   updatedAt: createdAt(),
   createdAt: createdAt(),

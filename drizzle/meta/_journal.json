@@ -43,6 +43,13 @@
       "when": 1794106697389,
       "tag": "0005_badges_rewards",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794118215198,
+      "tag": "0006_phase5_social_invites",
+      "breakpoints": true
     }
   ]
 }

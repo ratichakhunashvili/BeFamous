@@ -4,7 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db, schema } from "@/db";
-import { completeMission, recordActivity, setMissionStatus } from "@/lib/progress";
+import { completeMission, recordActivity, setMissionStatus, trackSocialPost } from "@/lib/progress";
 import { requireUser } from "@/lib/session";
 import { fetchPreview, missingHashtags, parsePostUrl } from "@/lib/social";
 
@@ -115,6 +115,7 @@ export async function verifySubmissionAction(submissionId: string): Promise<{ ne
     } else {
       await tx.update(schema.submissions).set({ status: "pending", caption, reviewNote: null }).where(eq(schema.submissions.id, id));
       await setMissionStatus(tx, user.id, sub.missionId, "pending_review");
+      await trackSocialPost(tx, { ...sub, caption }, "ownership_check"); // 60: admin compares the author with the user's account
     }
     await recordActivity(tx, user.id);
   });

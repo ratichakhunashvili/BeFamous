@@ -4,12 +4,13 @@
 import { createHash, randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { and, eq, gt, isNull, sql } from "drizzle-orm";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { AuthError } from "next-auth";
 import { z } from "zod";
 import { signIn, signOut } from "@/auth";
 import { db, schema } from "@/db";
+import { acceptInvite, INVITE_COOKIE, isInviteCode } from "@/lib/invites";
 
 export type FormState = { error?: string; fieldErrors?: Record<string, string>; values?: Record<string, string> } | undefined;
 
@@ -38,6 +39,14 @@ export async function signupAction(_prev: FormState, form: FormData): Promise<Fo
     .returning({ id: schema.users.id });
 
   if (inserted.length === 0) return { fieldErrors: { email: "taken" }, values };
+
+  // Came from a friend's invite link (/i/CODE)? Credit the inviter.
+  const jar = await cookies();
+  const code = jar.get(INVITE_COOKIE)?.value;
+  if (isInviteCode(code)) {
+    await db.transaction((tx) => acceptInvite(tx, inserted[0].id, code));
+    jar.delete(INVITE_COOKIE);
+  }
 
   // Log the new user straight in, then continue to interests (Figma: → interests).
   await signIn("credentials", { email: parsed.data.email, password: parsed.data.password, redirectTo: "/interests" });

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 import { ChallengeCard, type CardChallenge } from "@/components/challenge-card";
 import { BottomNav, TabTopBar } from "@/components/nav";
-import { ButtonLink, CurvesBackdrop, PageTitle, Screen } from "@/components/ui";
+import { ButtonLink, CurvesBackdrop, PageTitle, ResultPanel, Screen } from "@/components/ui";
 import type { Locale } from "@/i18n/request";
 import { isCity } from "@/lib/cities";
 import { tr } from "@/lib/i18n-fields";
@@ -18,6 +18,7 @@ export default async function DiscoverPage({ searchParams }: PageProps<"/discove
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("discover");
   const tc = await getTranslations("citiesIn");
+  const ts = await getTranslations("statusPages");
 
   const interests = await getInterests();
   const category = interests.find((i) => i.slug === sp.category);
@@ -75,7 +76,16 @@ export default async function DiscoverPage({ searchParams }: PageProps<"/discove
           <Chip href="/discover/filters" active={false} label={t("filter")} width={98} />
         </div>
 
-        {cards.length === 0 && <p className="w-full rounded-bf-16 border border-line bg-surface p-4 text-center text-body text-white">{t("empty")}</p>}
+        {cards.length === 0 && (
+          // 27 ცარიელი მდგომარეობა — Figma 87:8807
+          <>
+            <ResultPanel icon="/figma/icon-search-26.svg" title={ts("emptyTitle")} body={ts("emptyBody")} />
+            <ButtonLink href="/discover">{ts("clearFilter")}</ButtonLink>
+            <ButtonLink href="/discover/filters" variant="secondary">
+              {ts("changeSearch")}
+            </ButtonLink>
+          </>
+        )}
 
         <CardGrid cards={cards} />
 

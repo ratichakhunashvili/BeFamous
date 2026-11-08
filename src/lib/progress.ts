@@ -156,6 +156,33 @@ export async function issueChallengeReward(tx: Tx, userId: string, challengeId: 
   }
 }
 
+// ---------- Social posts ----------
+
+type PostStatus = (typeof schema.postStatusEnum.enumValues)[number];
+
+/**
+ * Keeps one social_posts row per registered submission, so the post shows on 57 and its
+ * verification state (60 ownership check → verified, or 62–64 set by an admin) can be tracked.
+ */
+export async function trackSocialPost(tx: Tx, sub: { id: string; userId: string; missionId: string; mediaUrl: string; platform: string | null; caption: string | null }, status: PostStatus) {
+  const existing = await tx.query.socialPosts.findFirst({ where: eq(schema.socialPosts.submissionId, sub.id) });
+  if (existing) {
+    await tx.update(schema.socialPosts).set({ status, caption: sub.caption, updatedAt: new Date() }).where(eq(schema.socialPosts.id, existing.id));
+    return existing.id;
+  }
+  const account = sub.platform
+    ? await tx.query.linkedSocialAccounts.findFirst({
+        where: and(eq(schema.linkedSocialAccounts.userId, sub.userId), eq(schema.linkedSocialAccounts.platform, sub.platform as "tiktok" | "instagram")),
+      })
+    : undefined;
+  const title = sub.caption?.replace(/#[\p{L}\p{N}_]+/gu, "").trim().slice(0, 40) || null;
+  const [row] = await tx
+    .insert(schema.socialPosts)
+    .values({ userId: sub.userId, missionId: sub.missionId, submissionId: sub.id, accountId: account?.id, platform: sub.platform, url: sub.mediaUrl, caption: sub.caption, title, status })
+    .returning({ id: schema.socialPosts.id });
+  return row.id;
+}
+
 /** Admin decision on a submitted post. */
 export async function reviewSubmission(submissionId: string, reviewerId: string | null, decision: "approved" | "revision" | "rejected", note?: string) {
   return db.transaction(async (tx) => {
@@ -165,6 +192,7 @@ export async function reviewSubmission(submissionId: string, reviewerId: string 
 
     if (decision === "approved") {
       await completeMission(tx, sub.userId, sub.missionId);
+      await tx.update(schema.socialPosts).set({ status: "verified", updatedAt: new Date() }).where(eq(schema.socialPosts.submissionId, submissionId));
       await tx.insert(notifications).values({ userId: sub.userId, kind: "submission_approved", data: { submissionId } });
     } else {
       await setMissionStatus(tx, sub.userId, sub.missionId, "in_progress");

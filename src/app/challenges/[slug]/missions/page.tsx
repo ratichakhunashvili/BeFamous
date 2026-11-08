@@ -47,7 +47,7 @@ export default async function MissionsPage({ params }: PageProps<"/challenges/[s
   const pct = required.length ? Math.round((requiredDone / required.length) * 100) : 0;
 
   const hrefFor = (type: string, id: string) =>
-    type === "visit_qr" ? `/missions/${id}/qr` : type === "upload" ? `/missions/${id}/upload` : type === "invite" ? "/invite" : undefined;
+    type === "visit_qr" ? `/missions/${id}/qr` : type === "upload" ? `/missions/${id}/upload` : type === "invite" ? `/invite?mission=${id}` : undefined;
 
   return (
     <Screen>

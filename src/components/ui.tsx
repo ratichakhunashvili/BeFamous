@@ -136,14 +136,14 @@ export function Panel({ children, className = "" }: { children: ReactNode; class
 }
 
 /** Status panel: 52px icon tile + H2 + body (39, 40, 14, 15, 16, 42). */
-export function ResultPanel({ icon, title, body, centerTitle = false }: { icon: string; title: string; body: string; centerTitle?: boolean }) {
+export function ResultPanel({ icon, title, body, centerTitle = false, centerBody = false }: { icon: string; title: string; body: string; centerTitle?: boolean; centerBody?: boolean }) {
   return (
     <Panel className="flex w-full flex-col gap-5 p-6 text-white">
       <span className="relative size-[52px] overflow-clip rounded-bf-16 bg-elevated">
         <Image src={icon} alt="" width={26} height={26} className="absolute left-[13px] top-[13px] size-[26px]" />
       </span>
       <h1 className={`text-h2 ${centerTitle ? "text-center" : ""}`}>{title}</h1>
-      <p className="text-body">{body}</p>
+      <p className={`text-body ${centerBody ? "text-center" : ""}`}>{body}</p>
     </Panel>
   );
 }
