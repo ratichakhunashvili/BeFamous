@@ -29,6 +29,20 @@
       "when": 1794105741957,
       "tag": "0003_submission_posts",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1794106692861,
+      "tag": "0004_badges_cleanup",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1794106697389,
+      "tag": "0005_badges_rewards",
+      "breakpoints": true
     }
   ]
 }

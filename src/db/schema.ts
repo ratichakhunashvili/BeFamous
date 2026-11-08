@@ -238,27 +238,56 @@ export const streaks = pgTable("streaks", {
   lastActiveDate: text("last_active_date"), // YYYY-MM-DD in Asia/Tbilisi
 });
 
+/** One row per day the user was active (drives the streak calendar on screen 21). */
+export const activityDays = pgTable(
+  "activity_days",
+  {
+    userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+    day: text("day").notNull(), // YYYY-MM-DD, Asia/Tbilisi
+  },
+  (t) => [primaryKey({ columns: [t.userId, t.day] })],
+);
+
+/** A badge collection (18): e.g. "Street to Catwalk" with 4 levels. */
 export const badges = pgTable("badges", {
   id: id(),
   slug: text("slug").notNull().unique(),
   nameKa: text("name_ka").notNull(),
   nameEn: text("name_en").notNull(),
-  descriptionKa: text("description_ka"),
-  descriptionEn: text("description_en"),
-  conditionKa: text("condition_ka"),
-  conditionEn: text("condition_en"),
-  icon: text("icon"),
-  rule: jsonb("rule"), // e.g. { type: "missions_completed", count: 5 }
+  subtitleKa: text("subtitle_ka"), // e.g. "რითეილი და მოდა"
+  subtitleEn: text("subtitle_en"),
+  bonusKa: text("bonus_ka"), // final-level bonus ("ბოლო დონის ბონუსი")
+  bonusEn: text("bonus_en"),
+  icon: text("icon"), // list icon (18)
+  heroUrl: text("hero_url"),
+  coverArt: jsonb("cover_art").$type<{ icon: string; kicker: string; label: string }>(),
+  interestId: uuid("interest_id").references(() => interests.id), // levels count challenges in this interest
+  sortOrder: integer("sort_order").notNull().default(0),
 });
 
-export const userBadges = pgTable(
-  "user_badges",
+/** Badge level rule, checked automatically after completions and streak updates. */
+export type BadgeRule = { type: "challenges"; count: number } | { type: "streak"; days: number };
+
+export const badgeLevels = pgTable("badge_levels", {
+  id: id(),
+  badgeId: uuid("badge_id").notNull().references(() => badges.id, { onDelete: "cascade" }),
+  position: integer("position").notNull(), // 1..4
+  nameKa: text("name_ka").notNull(),
+  nameEn: text("name_en").notNull(),
+  xpReward: integer("xp_reward").notNull().default(0),
+  conditionKa: text("condition_ka").notNull(),
+  conditionEn: text("condition_en").notNull(),
+  rule: jsonb("rule").$type<BadgeRule>().notNull(),
+});
+
+export const userBadgeLevels = pgTable(
+  "user_badge_levels",
   {
     userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    badgeId: uuid("badge_id").notNull().references(() => badges.id, { onDelete: "cascade" }),
+    levelId: uuid("level_id").notNull().references(() => badgeLevels.id, { onDelete: "cascade" }),
     earnedAt: createdAt(),
   },
-  (t) => [primaryKey({ columns: [t.userId, t.badgeId] })],
+  (t) => [primaryKey({ columns: [t.userId, t.levelId] })],
 );
 
 // ---------- Rewards & vouchers ----------
@@ -269,7 +298,10 @@ export const rewards = pgTable("rewards", {
   descriptionKa: text("description_ka"),
   descriptionEn: text("description_en"),
   brand: text("brand"),
-  xpCost: integer("xp_cost").notNull().default(0),
+  valueGel: integer("value_gel"), // voucher value in lari (null for boxes / gifts)
+  usageKa: text("usage_ka").default("ერთჯერადი"),
+  usageEn: text("usage_en").default("Single use"),
+  xpCost: integer("xp_cost").notNull().default(0), // 0 = earned by completing the challenge
   challengeId: uuid("challenge_id").references(() => challenges.id, { onDelete: "set null" }),
   stock: integer("stock"),
   active: boolean("active").notNull().default(true),
@@ -285,6 +317,7 @@ export const vouchers = pgTable("vouchers", {
   userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   code: text("code").notNull().unique(),
   status: voucherStatusEnum("status").notNull().default("issued"),
+  expiresAt: timestamp("expires_at", { withTimezone: true }),
   redeemedAt: timestamp("redeemed_at", { withTimezone: true }),
   createdAt: createdAt(),
 });

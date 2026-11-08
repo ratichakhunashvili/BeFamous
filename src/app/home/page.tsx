@@ -18,12 +18,13 @@ export default async function HomePage() {
   const locale = (await getLocale()) as Locale;
   const t = await getTranslations("home");
 
-  const [user, streak, list, interestIds, [{ value: badgeCount }]] = await Promise.all([
+  const [user, streak, list, interestIds, [{ value: badgeCount }], [{ value: levelCount }]] = await Promise.all([
     db.query.users.findFirst({ where: eq(schema.users.id, session.id), columns: { name: true, xp: true } }),
     db.query.streaks.findFirst({ where: eq(schema.streaks.userId, session.id) }),
     listChallenges(),
     getUserInterestIds(session.id),
     db.select({ value: count() }).from(schema.badges),
+    db.select({ value: count() }).from(schema.badgeLevels),
   ]);
 
   // Featured = first challenge matching the user's interests, otherwise the first one.
@@ -67,7 +68,7 @@ export default async function HomePage() {
           />
         )}
 
-        <InfoRow href="/badges" layout="centered" icon="/figma/icon-badge.svg" chevron="/figma/icon-chevron.svg" title={t("badges")} body={t("badgesMeta", { collections: badgeCount, levels: badgeCount * 4 })} />
+        <InfoRow href="/badges" layout="centered" icon="/figma/icon-badge.svg" chevron="/figma/icon-chevron.svg" title={t("badges")} body={t("badgesMeta", { collections: badgeCount, levels: levelCount })} />
       </main>
       <BottomNav active="home" />
     </Screen>

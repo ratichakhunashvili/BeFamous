@@ -93,7 +93,7 @@ export function InfoRow({
       </span>
       <span className={`flex min-w-0 flex-1 flex-col text-white ${layout === "centered" ? "gap-5 text-center" : layout === "titleCentered" ? "gap-5" : "gap-1 text-left"}`}>
         <span className={`whitespace-pre-wrap text-label ${layout === "titleCentered" ? "text-center" : ""}`}>{title}</span>
-        <span className="text-caption">{body}</span>
+        <span className="whitespace-pre-wrap text-caption">{body}</span>
       </span>
       {chevron && <Image src={chevron} alt="" width={16} height={16} className="size-4 shrink-0" />}
     </>

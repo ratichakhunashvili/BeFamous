@@ -35,5 +35,6 @@ In development, password-reset links are printed in the terminal instead of bein
 | `npm run db:generate` | Create a migration after editing `schema.ts` |
 | `npm run db:migrate` | Apply migrations to the database |
 | `npm run db:seed` | Create or update the admin account |
+| `npm run backfill` | Give badges / vouchers for challenges completed before those rules existed |
 | `npm run dev:review -- approve` | Dev only: approve / `revision "note"` / `reject "note"` the latest submitted post (until the admin panel exists) |
 | `npm run typecheck` / `npm run lint` | Static checks |

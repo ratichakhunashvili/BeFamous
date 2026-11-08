@@ -4,7 +4,7 @@ import { and, eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db, schema } from "@/db";
-import { completeMission, setMissionStatus } from "@/lib/progress";
+import { completeMission, recordActivity, setMissionStatus } from "@/lib/progress";
 import { requireUser } from "@/lib/session";
 import { fetchPreview, missingHashtags, parsePostUrl } from "@/lib/social";
 
@@ -48,6 +48,7 @@ export async function checkinAction(form: FormData) {
   await db.transaction(async (tx) => {
     await tx.insert(schema.checkins).values({ userId: user.id, qrCodeId: qr.id }).onConflictDoNothing();
     await completeMission(tx, user.id, missionId);
+    await recordActivity(tx, user.id);
   });
   redirect(`/missions/${missionId}/qr/confirmed`);
 }
@@ -115,6 +116,7 @@ export async function verifySubmissionAction(submissionId: string): Promise<{ ne
       await tx.update(schema.submissions).set({ status: "pending", caption, reviewNote: null }).where(eq(schema.submissions.id, id));
       await setMissionStatus(tx, user.id, sub.missionId, "pending_review");
     }
+    await recordActivity(tx, user.id);
   });
   return { next: `/submissions/${id}` };
 }

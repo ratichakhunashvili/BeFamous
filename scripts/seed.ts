@@ -10,6 +10,7 @@ import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import bcrypt from "bcryptjs";
 import * as schema from "../src/db/schema";
+import { badgeSeed, rewardSeed } from "./seed-badges";
 import { challengeSeed, interestSeed, rulesFor } from "./seed-data";
 
 async function main() {
@@ -56,6 +57,33 @@ async function main() {
     }
   }
   console.log(`Challenges: ${challengeSeed.length}`);
+
+  // Badge collections + levels (levels are replaced only when a collection has none yet)
+  const interestBySlug = Object.fromEntries((await db.select().from(schema.interests)).map((i) => [i.slug, i.id]));
+  for (const [index, b] of badgeSeed.entries()) {
+    const { levels, interest, ...fields } = b;
+    const values = { ...fields, interestId: interest ? interestBySlug[interest] : null, sortOrder: index + 1 };
+    const [row] = await db.insert(schema.badges).values(values).onConflictDoUpdate({ target: schema.badges.slug, set: values }).returning({ id: schema.badges.id });
+    const has = await db.query.badgeLevels.findFirst({ where: eq(schema.badgeLevels.badgeId, row.id) });
+    if (!has) {
+      await db.insert(schema.badgeLevels).values(
+        levels.map((l, i) => ({ badgeId: row.id, position: i + 1, nameKa: l.nameKa, nameEn: l.nameEn, xpReward: l.xp, conditionKa: l.ka, conditionEn: l.en, rule: l.rule })),
+      );
+    }
+  }
+  console.log(`Badge collections: ${badgeSeed.length}`);
+
+  // Rewards (one per challenge)
+  for (const r of rewardSeed) {
+    const ch = await db.query.challenges.findFirst({ where: eq(schema.challenges.slug, r.challenge) });
+    if (!ch) continue;
+    const existing = await db.query.rewards.findFirst({ where: eq(schema.rewards.challengeId, ch.id) });
+    const { challenge, ...values } = r;
+    void challenge;
+    if (existing) await db.update(schema.rewards).set(values).where(eq(schema.rewards.id, existing.id));
+    else await db.insert(schema.rewards).values({ ...values, challengeId: ch.id });
+  }
+  console.log(`Rewards: ${rewardSeed.length}`);
 
   // One QR code per visit mission (admins create more in the admin panel).
   const visitMissions = await db.select({ id: schema.missions.id }).from(schema.missions).where(eq(schema.missions.type, "visit_qr"));
