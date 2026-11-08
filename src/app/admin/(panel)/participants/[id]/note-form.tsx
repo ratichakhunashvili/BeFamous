@@ -9,7 +9,7 @@ type Labels = { heading: string; comment: string; placeholder: string; cancel: s
 export function NoteForm({ submissionId, decision, labels }: { submissionId: string; decision: "revision" | "rejected"; labels: Labels }) {
   const [state, action, pending] = useActionState(decideWithNoteAction, undefined);
   return (
-    <form action={action} className="flex w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6" noValidate>
+    <form action={action} className="flex w-full max-w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6" noValidate>
       <input type="hidden" name="submissionId" value={submissionId} />
       <input type="hidden" name="decision" value={decision} />
       <h2 className="text-h3 text-text">{labels.heading}</h2>

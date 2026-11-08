@@ -32,7 +32,7 @@ function Check({ icon, title, body }: { icon: string; title: string; body: strin
 function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-start gap-2">
-      <span className="w-[388px] shrink-0 text-caption text-muted">{label}</span>
+      <span className="w-2/5 shrink-0 text-caption text-muted">{label}</span>
       <span className="min-w-0 flex-1 break-words text-right text-label text-text">{children}</span>
     </div>
   );
@@ -59,8 +59,8 @@ export default async function ReviewPage({ params }: PageProps<"/admin/participa
       <AdminHeader crumb={c("crumb")} back="/admin/participants" />
       <AdminBody>
         <AdminTitle eyebrow={t("eyebrow")} title={t("title")} body={`${user.name} · ${tr(challenge, "title", locale)}`} />
-        <div className="flex items-start gap-6">
-          <AdminPanel className="w-[768px] shrink-0 gap-4 p-6">
+        <div className="flex flex-col items-stretch gap-6 lg:flex-row lg:items-start">
+          <AdminPanel className="w-full lg:w-[768px] lg:shrink-0 gap-4 p-6">
             <h2 className="text-h3 text-text">{t("work")}</h2>
             <div className="relative h-[324px] overflow-clip rounded-bf-16 bg-elevated">
               {sub.thumbnailUrl ? (
@@ -91,7 +91,7 @@ export default async function ReviewPage({ params }: PageProps<"/admin/participa
             <Row label={t("submitted")}>{dayMonth(sub.createdAt, locale)}</Row>
           </AdminPanel>
 
-          <AdminPanel className="w-[340px] shrink-0 gap-3 p-5">
+          <AdminPanel className="w-full lg:w-[340px] lg:shrink-0 gap-3 p-5">
             <h2 className="text-h3 text-text">{t("assessment")}</h2>
             {visited !== null && <Check icon={visited ? "/figma/admin/icon-check-20.svg" : "/figma/icon-clock-20.svg"} title={t("qr")} body={visited ? t("qrDone") : t("qrMissing")} />}
             <Check
@@ -123,7 +123,7 @@ export default async function ReviewPage({ params }: PageProps<"/admin/participa
         </div>
 
         {post && (
-          <AdminPanel className="w-[768px] gap-4 p-6">
+          <AdminPanel className="w-full max-w-[768px] gap-4 p-6">
             <div className="flex flex-col gap-1">
               <h2 className="text-h3 text-text">{t("monitorTitle")}</h2>
               <p className="text-body text-muted">{t("monitorBody")}</p>
@@ -133,7 +133,7 @@ export default async function ReviewPage({ params }: PageProps<"/admin/participa
               {t("metricsLine", { views: fmt(metrics?.views), likes: fmt(metrics?.likes), comments: fmt(metrics?.comments) })}
             </Row>
             <Row label={t("source")}>{post.metricsSource && post.lastSyncedAt ? `${post.metricsSource} · ${dayMonth(post.lastSyncedAt, locale)}` : t("noMetrics")}</Row>
-            <form action={saveMetricsAction} className="grid grid-cols-4 items-end gap-2">
+            <form action={saveMetricsAction} className="grid grid-cols-2 items-end gap-2 sm:grid-cols-4">
               <input type="hidden" name="postId" value={post.id} />
               <input type="hidden" name="back" value={back} />
               {(["views", "likes", "comments"] as const).map((k) => (

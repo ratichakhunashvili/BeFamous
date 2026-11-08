@@ -77,7 +77,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps<"/admin/
               {p.label}
             </Link>
           ))}
-          <form action="/admin/analytics" className="ml-auto flex items-center gap-2">
+          <form action="/admin/analytics" className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto">
             {days === 7 && <input type="hidden" name="period" value="7d" />}
             <select name="campaign" defaultValue={campaign?.id ?? ""} className="h-11 rounded-full border border-line bg-surface px-4 text-caption text-text">
               <option value="">{t("allCampaigns")}</option>
@@ -95,7 +95,7 @@ export default async function AnalyticsPage({ searchParams }: PageProps<"/admin/
 
         {empty ? (
           // 24 ცარიელი ანალიტიკა
-          <AdminPanel className="w-[768px] gap-4 p-6">
+          <AdminPanel className="w-full max-w-[768px] gap-4 p-6">
             <div className="flex flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6">
               <span className="relative size-[52px] rounded-bf-16 bg-elevated">
                 <Image src="/figma/icon-chart-26.svg" alt="" width={26} height={26} className="absolute left-[13px] top-[13px] size-[26px]" />
@@ -118,13 +118,13 @@ export default async function AnalyticsPage({ searchParams }: PageProps<"/admin/
               <StatCard href="/admin/participants" icon="/figma/admin/metric-icon-camera-16.svg" label={t("works")} value={fmt(stats.approved)} sub={t("worksSub")} />
               <StatCard icon="/figma/admin/stat-qr-16.svg" label={t("visits")} value={stats.visits == null ? "—" : fmt(stats.visits)} sub={stats.visits == null ? t("visitsNa") : t("visitsSub")} />
             </div>
-            <div className="flex items-start gap-6">
-              <AdminPanel className="w-[768px] shrink-0 gap-3 p-5">
+            <div className="flex flex-col items-stretch gap-6 lg:flex-row lg:items-start">
+              <AdminPanel className="w-full lg:w-[768px] lg:shrink-0 gap-3 p-5">
                 <h2 className="text-h3 text-text">{t("chartTitle")}</h2>
                 <p className="text-caption text-muted">{days === 7 ? t("chart7") : t("chart30", { range: dateRange(series[0].date, series[series.length - 1].date, locale) })}</p>
                 <BarChart values={bars.map((b) => b.value)} labels={bars.map((b) => label.format(b.date))} label={t("chartTitle")} />
               </AdminPanel>
-              <AdminPanel className="w-[340px] shrink-0 gap-[14px] p-5">
+              <AdminPanel className="w-full lg:w-[340px] lg:shrink-0 gap-[14px] p-5">
                 <h2 className="text-h3 text-text">{t("funnel")}</h2>
                 {stats.views != null && <Step label={t("views")} value={fmt(stats.views)} pct={100} />}
                 <Step label={t("participation")} value={fmt(stats.joined)} pct={top ? (stats.joined / top) * 100 : 0} />

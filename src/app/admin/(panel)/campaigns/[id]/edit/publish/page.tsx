@@ -29,7 +29,7 @@ export default async function PublishPage({ params, searchParams }: PageProps<"/
       <AdminHeader crumb={c("crumb")} back={`/admin/campaigns/${ch.id}/edit/review`} action={<ButtonLink href="/admin/campaigns/new" variant="secondary" className="!w-[202px]">{t("newCampaign")}</ButtonLink>} />
       <AdminBody>
         <AdminTitle eyebrow={t("publishEyebrow")} title={t("publishTitle")} body={t("publishBody")} />
-        <div className="flex w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6">
+        <div className="flex w-full max-w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6">
           <h2 className="text-h2 text-text">{tr(ch, "title", locale)}</h2>
           <div className="flex items-center gap-3 rounded-bf-16 border border-line bg-surface p-3">
             <span className="relative size-9 shrink-0 rounded-bf-12 bg-elevated">

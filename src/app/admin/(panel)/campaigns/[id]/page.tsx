@@ -45,7 +45,7 @@ export default async function CampaignDetailPage({ params }: PageProps<"/admin/c
         {header}
         <AdminBody>
           <AdminTitle eyebrow={t("eyebrowShort")} title={t("scheduledDetailTitle")} body={ch.startsAt ? t("scheduledDetailBody", { date: dayMonth(ch.startsAt, locale) }) : t("scheduledDetailBodyNoDate")} />
-          <AdminPanel className="w-[768px] gap-4 p-6">
+          <AdminPanel className="w-full max-w-[768px] gap-4 p-6">
             <h2 className="text-h2 text-text">{tr(ch, "title", locale)}</h2>
             <div className="flex items-center gap-3 rounded-bf-16 border border-line bg-surface p-3">
               <span className="relative size-9 shrink-0 rounded-bf-12 bg-elevated">
@@ -76,8 +76,8 @@ export default async function CampaignDetailPage({ params }: PageProps<"/admin/c
       {header}
       <AdminBody>
         <AdminTitle eyebrow={t("eyebrowDetail")} title={tr(ch, "title", locale)} body={subtitle} action={<ButtonLink href={`/admin/analytics?campaign=${ch.id}`}>{t("analytics")}</ButtonLink>} />
-        <div className="flex items-start gap-6">
-          <AdminPanel className="w-[768px] shrink-0 gap-4 p-6">
+        <div className="flex flex-col items-stretch gap-6 lg:flex-row lg:items-start">
+          <AdminPanel className="w-full lg:w-[768px] lg:shrink-0 gap-4 p-6">
             <h2 className="text-h3 text-text">{t("content")}</h2>
             <CollectionHero heroUrl={ch.heroUrl ?? ch.coverUrl} art={ch.coverArt} height={246} ellipse={{ left: 512, top: -39, w: 314.88, h: 280.44 }} />
             <h3 className="text-h2 text-text">{campaign.missions.map((m) => tr(m, "title", locale)).join(" · ") || tr(ch, "title", locale)}</h3>
@@ -99,7 +99,7 @@ export default async function CampaignDetailPage({ params }: PageProps<"/admin/c
               )}
             </div>
           </AdminPanel>
-          <AdminPanel className="w-[340px] shrink-0 gap-4 p-5">
+          <AdminPanel className="w-full lg:w-[340px] lg:shrink-0 gap-4 p-5">
             <h2 className="text-h3 text-text">{t("summary")}</h2>
             <Row label={t("status")} value={t(`statusShort.${ch.status}`)} />
             <Row label={t("colJoined")} value={String(campaign.joined)} />

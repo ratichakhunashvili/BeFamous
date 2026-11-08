@@ -30,3 +30,22 @@ export function SidebarNav({ items }: { items: NavItem[] }) {
     </ul>
   );
 }
+
+/** Horizontal tab row for small screens. */
+export function MobileTabs({ items }: { items: NavItem[] }) {
+  const path = usePathname();
+  return (
+    <ul className="flex gap-1">
+      {items.map((item) => {
+        const active = item.href === "/admin" ? path === "/admin" : path.startsWith(item.href);
+        return (
+          <li key={item.href} className="shrink-0">
+            <Link href={item.href} aria-current={active ? "page" : undefined} className={`flex h-10 items-center rounded-full px-3 text-caption ${active ? "bg-primary text-on-primary" : "text-muted hover:bg-elevated"}`}>
+              {item.label}
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}

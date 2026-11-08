@@ -25,7 +25,7 @@ export default async function PublishedPage({ params }: PageProps<"/admin/campai
       <AdminHeader crumb={c("crumb")} back="/admin/campaigns" />
       <AdminBody>
         <AdminTitle eyebrow={tc("eyebrowShort")} title={scheduled ? t("scheduledTitle") : t("publishedTitle")} body={scheduled && ch.startsAt ? t("scheduledBody", { date: dayMonth(ch.startsAt, locale) }) : t("publishedBody")} />
-        <div className="flex w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6">
+        <div className="flex w-full max-w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6">
           <h2 className="text-h2 text-text">{tr(ch, "title", locale)}</h2>
           <div className="flex items-center gap-3 rounded-bf-16 border border-line bg-surface p-3">
             <span className="relative size-9 shrink-0 rounded-bf-12 bg-elevated">

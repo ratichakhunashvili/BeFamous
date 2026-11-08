@@ -31,11 +31,11 @@ export default async function ExportPreviewPage({ searchParams }: PageProps<"/ad
             rows={data.rows.map((r) => ({ key: r.key, cells: [t(`metric.${r.key}`), r.value == null ? t("unavailable") : r.value.toLocaleString("en-US"), period] }))}
           />
         </AdminPanel>
-        <div className="flex gap-3">
-          <a href={`/admin/analytics/export.csv${qs ? `?${qs}` : ""}`} download className="flex h-12 w-[244px] items-center justify-center rounded-bf-12 bg-action text-label text-white hover:opacity-90">
+        <div className="flex flex-col gap-3 sm:flex-row">
+          <a href={`/admin/analytics/export.csv${qs ? `?${qs}` : ""}`} download className="flex h-12 w-full sm:w-[244px] items-center justify-center rounded-bf-12 bg-action text-label text-white hover:opacity-90">
             {t("download")}
           </a>
-          <a href={back} className="flex h-12 w-[244px] items-center justify-center rounded-bf-12 border border-line bg-surface text-label text-text hover:bg-elevated">
+          <a href={back} className="flex h-12 w-full sm:w-[244px] items-center justify-center rounded-bf-12 border border-line bg-surface text-label text-text hover:bg-elevated">
             {t("backToAnalytics")}
           </a>
         </div>

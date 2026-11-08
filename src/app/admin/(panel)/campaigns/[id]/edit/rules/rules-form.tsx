@@ -12,7 +12,7 @@ export function RulesForm({ campaignId, initial, labels }: { campaignId: string;
   const v = state?.values ?? initial;
   const err = (k: string) => (state?.fieldErrors?.[k] ? labels.invalid : undefined);
   const pair = (key: "entry" | "method" | "work") => (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <TextField label={`${labels[key]} · ${labels.ka}`} name={`${key}Ka`} defaultValue={v[`${key}Ka`]} required maxLength={160} error={err(`${key}Ka`)} />
       <TextField label={`${labels[key]} · ${labels.en}`} name={`${key}En`} defaultValue={v[`${key}En`]} required maxLength={160} error={err(`${key}En`)} />
     </div>

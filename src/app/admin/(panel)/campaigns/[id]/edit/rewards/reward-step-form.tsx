@@ -18,7 +18,7 @@ export function RewardStepForm({ campaignId, initial, labels }: { campaignId: st
   return (
     <form action={action} className="flex flex-col gap-4" noValidate>
       <input type="hidden" name="campaignId" value={campaignId} />
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <TextField label={labels.rewardKa} name="rewardKa" defaultValue={v.rewardKa} placeholder="50 ₾ ყავის ვაუჩერი" error={err("rewardKa")} />
         <TextField label={labels.rewardEn} name="rewardEn" defaultValue={v.rewardEn} placeholder="50 ₾ coffee voucher" error={err("rewardEn")} />
         <TextField label={labels.value} name="valueGel" inputMode="numeric" value={value} onChange={(e) => setValue(e.target.value)} placeholder="50" error={err("valueGel")} />

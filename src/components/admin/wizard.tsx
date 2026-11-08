@@ -32,9 +32,9 @@ export async function WizardLayout({
       <AdminHeader crumb={c("crumb")} back={back} action={<ButtonLink href="/admin/campaigns/new" variant="secondary" className="!w-[202px]">{t("newCampaign")}</ButtonLink>} />
       <AdminBody>
         <AdminTitle eyebrow={t("eyebrow", { n: index + 1 })} title={title} body={body} />
-        <div className="flex items-start gap-6">
-          <div className="flex w-[768px] shrink-0 flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6">{children}</div>
-          <aside className="flex w-[340px] shrink-0 flex-col gap-3 rounded-bf-16 border border-line bg-surface p-5">
+        <div className="flex flex-col items-stretch gap-6 lg:flex-row lg:items-start">
+          <div className="flex w-full flex-col gap-4 rounded-bf-16 border border-line bg-surface p-4 sm:p-6 lg:w-[768px] lg:shrink-0">{children}</div>
+          <aside className="flex w-full lg:w-[340px] lg:shrink-0 flex-col gap-3 rounded-bf-16 border border-line bg-surface p-5">
             <h2 className="text-h3 text-text">{t("path")}</h2>
             {STEPS.map((s, i) => {
               const current = s === step;

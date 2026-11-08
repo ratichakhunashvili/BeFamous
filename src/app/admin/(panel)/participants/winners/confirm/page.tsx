@@ -35,8 +35,8 @@ export default async function ConfirmWinnersPage({ searchParams }: PageProps<"/a
       <AdminHeader crumb={c("crumb")} back={`/admin/participants/winners?campaign=${campaign.id}`} />
       <AdminBody>
         <SimpleTitle title={t("confirmTitle")} body={`${tr(campaign, "title", locale)} · ${t("confirmBody")}`} />
-        {sp.done && <p className="w-[900px] rounded-bf-12 border border-line bg-surface p-3 text-body text-accent">{t("confirmed")}</p>}
-        <div className="flex w-[900px] flex-col gap-5 rounded-bf-16 bg-surface p-6 text-[15px] text-text">
+        {sp.done && <p className="w-full max-w-[900px] rounded-bf-12 border border-line bg-surface p-3 text-body text-accent">{t("confirmed")}</p>}
+        <div className="flex w-full max-w-[900px] flex-col gap-5 rounded-bf-16 bg-surface p-6 text-[15px] text-text">
           {categories.map((cat) => {
             const x = winners.find((r) => r.w.category === cat);
             return (
@@ -50,9 +50,9 @@ export default async function ConfirmWinnersPage({ searchParams }: PageProps<"/a
           <p>{t("prizeLine")}</p>
           <p>{t("policyLine")}</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-col gap-3 sm:flex-row">
           {pending && (
-            <form action={confirmWinnersAction} className="w-[310px]">
+            <form action={confirmWinnersAction} className="w-full sm:w-[310px]">
               <input type="hidden" name="challengeId" value={campaign.id} />
               <SubmitButton className="!h-[52px]">{t("confirm")}</SubmitButton>
             </form>

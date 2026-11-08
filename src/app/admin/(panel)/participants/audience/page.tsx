@@ -49,7 +49,7 @@ export default async function AudiencePage() {
       <AdminHeader crumb={c("crumb")} back="/admin/participants" />
       <AdminBody>
         <SimpleTitle title={t("title")} body={t("body")} />
-        <div className="flex w-[900px] flex-col gap-5 rounded-bf-16 bg-surface p-6 text-[15px] text-text">
+        <div className="flex w-full max-w-[900px] flex-col gap-5 rounded-bf-16 bg-surface p-6 text-[15px] text-text">
           <p>{t("note", { min: MIN_GROUP })}</p>
           {total === 0 ? (
             <p className="text-muted">{t("empty")}</p>

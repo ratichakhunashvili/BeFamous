@@ -10,11 +10,11 @@ export function RewardForm({ challenges, labels }: { challenges: { value: string
   const v = state?.values ?? {};
   const err = (k: string) => (state?.fieldErrors?.[k] ? labels.invalid : undefined);
   return (
-    <form key={state ? JSON.stringify(state) : "initial"} action={action} className="flex w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6" noValidate>
+    <form key={state ? JSON.stringify(state) : "initial"} action={action} className="flex w-full max-w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6" noValidate>
       <h2 className="text-h3 text-text">{labels.heading}</h2>
       <Field label={labels.titleKa} name="titleKa" defaultValue={v.titleKa} placeholder="20 ₾ ყავის ვაუჩერი" required error={err("titleKa")} />
       <Field label={labels.titleEn} name="titleEn" defaultValue={v.titleEn} placeholder="20 ₾ coffee voucher" required error={err("titleEn")} />
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <Field label={labels.value} name="valueGel" inputMode="numeric" defaultValue={v.valueGel} placeholder="20" error={err("valueGel")} />
         <Field label={labels.brand} name="brand" defaultValue={v.brand} placeholder="ქარხანა Coffee" error={err("brand")} />
         <Field label={labels.stock} name="stock" inputMode="numeric" defaultValue={v.stock} placeholder="25" hint={labels.stockHint} error={err("stock")} />

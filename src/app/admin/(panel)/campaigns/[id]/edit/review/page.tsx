@@ -13,7 +13,7 @@ import { requireAdminPage } from "@/lib/session";
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center gap-2">
-      <span className="w-[388px] text-caption text-muted">{label}</span>
+      <span className="w-2/5 text-caption text-muted">{label}</span>
       <span className="flex-1 text-right text-label text-text">{value}</span>
     </div>
   );

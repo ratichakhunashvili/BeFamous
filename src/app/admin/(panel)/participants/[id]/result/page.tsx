@@ -46,7 +46,7 @@ export default async function ResultPage({ params }: PageProps<"/admin/participa
       <AdminHeader crumb={c("crumb")} back="/admin/participants" />
       <AdminBody>
         <AdminTitle eyebrow={t("resultEyebrow")} title={t(`result.${key}Title`)} body={key === "approved" ? (xp > 0 ? t("result.approvedBody", { xp }) : t("result.approvedNoXp")) : t(`result.${key}Body`)} />
-        <AdminPanel className="w-[768px] gap-4 p-6">
+        <AdminPanel className="w-full max-w-[768px] gap-4 p-6">
           <h2 className="text-h2 text-text">
             {t("queue")} · {left}
           </h2>

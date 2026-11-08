@@ -57,6 +57,10 @@ export default async function SubmissionPage({ params }: PageProps<"/submissions
       <>
         <ResultPanel icon="/figma/icon-activity-26.svg" title={title} body={body} />
         {sub.status === "revision" && <ButtonLink href={`/missions/${mission.id}/upload/${sub.id}/checking`}>{t("recheck")}</ButtonLink>}
+        {/* Fixed the post or posted a new one? Register the new link (13). */}
+        <ButtonLink href={`/missions/${mission.id}/upload`} variant="secondary">
+          {t("newLink")}
+        </ButtonLink>
         <ButtonLink href="/activity" variant={sub.status === "revision" ? "secondary" : "primary"}>
           {t("myActivity")}
         </ButtonLink>

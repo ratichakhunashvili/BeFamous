@@ -19,13 +19,13 @@ export function BasicsForm({ initial, interests, kinds, cities, labels }: { init
   return (
     <form key={state ? JSON.stringify(state) : "initial"} action={action} className="flex flex-col gap-4" noValidate>
       {v.id && <input type="hidden" name="id" value={v.id} />}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <TextField label={labels.titleKa} name="titleKa" defaultValue={v.titleKa} placeholder="Secret Coffee Moment" required maxLength={80} error={err("titleKa")} />
         <TextField label={labels.titleEn} name="titleEn" defaultValue={v.titleEn} placeholder="Secret Coffee Moment" required maxLength={80} error={err("titleEn")} />
       </div>
       <TextArea label={labels.goalKa} name="descriptionKa" defaultValue={v.descriptionKa} placeholder="პარტნიორ კაფეში მეტი ვიზიტი" maxLength={400} error={err("descriptionKa")} />
       <TextArea label={labels.goalEn} name="descriptionEn" defaultValue={v.descriptionEn} placeholder="More visits to the partner café" maxLength={400} error={err("descriptionEn")} />
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <TextField label={labels.startsAt} name="startsAt" type="date" defaultValue={v.startsAt} required error={err("startsAt")} />
         <TextField label={labels.endsAt} name="endsAt" type="date" defaultValue={v.endsAt} required error={err("endsAt")} />
         <SelectField label={labels.city} name="city" defaultValue={v.city} options={[{ value: "", label: labels.noCity }, ...cities]} error={err("city")} />

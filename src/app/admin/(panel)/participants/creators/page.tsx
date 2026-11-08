@@ -51,7 +51,7 @@ export default async function CreatorsPage({ searchParams }: PageProps<"/admin/p
       <AdminHeader crumb={c("crumb")} back="/admin/participants" />
       <AdminBody>
         <SimpleTitle title={t("title")} body={t("body")} />
-        <form action="/admin/participants/creators" className="flex w-[900px] items-center gap-2">
+        <form action="/admin/participants/creators" className="flex w-full max-w-[900px] items-center gap-2">
           <select name="interest" defaultValue={interest?.id ?? ""} className={box} aria-label={t("interest")}>
             <option value="">{t("allInterests")}</option>
             {interests.map((i) => (
@@ -72,7 +72,7 @@ export default async function CreatorsPage({ searchParams }: PageProps<"/admin/p
             {t("apply")}
           </button>
         </form>
-        <div className="flex w-[900px] flex-col gap-5 rounded-bf-16 bg-surface p-6 text-[15px] text-text">
+        <div className="flex w-full max-w-[900px] flex-col gap-5 rounded-bf-16 bg-surface p-6 text-[15px] text-text">
           <p>{t("note")}</p>
           <p>{`${t("interest")} — ${interest ? tr(interest, "name", locale) : t("allInterests")}`}</p>
           <p>{`${t("city")} — ${city ? tc(city) : t("allCities")}`}</p>

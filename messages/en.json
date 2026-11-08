@@ -257,7 +257,8 @@
     "approvedTitle": "Work approved",
     "approvedBody": "Your post was approved. Finish the remaining missions.",
     "earned": "Experience earned",
-    "seeRewards": "See rewards"
+    "seeRewards": "See rewards",
+    "newLink": "Paste a new link"
   },
   "location": {
     "eyebrow": "Search  /  Location",
@@ -777,7 +778,7 @@
       "body": "See campaign results and plan the next step.",
       "create": "Create campaign",
       "active": "Active campaigns",
-      "today": "Today",
+      "today": "Running now",
       "participants": "Participants",
       "trend": "{sign} {pct}% vs previous period",
       "noBaseline": "No data for the previous period",

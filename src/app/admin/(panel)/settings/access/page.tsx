@@ -21,9 +21,9 @@ export default async function AccessPage({ searchParams }: PageProps<"/admin/set
       <AdminHeader crumb={c("crumb")} back="/admin/settings" />
       <AdminBody>
         <SimpleTitle title={t("title")} body={t("body")} />
-        {sp.granted && <p className="w-[900px] rounded-bf-12 border border-line bg-surface p-3 text-body text-accent">{t("granted")}</p>}
-        {sp.error && <p className="w-[900px] rounded-bf-12 border border-line bg-surface p-3 text-body text-chart">{sp.error === "self" ? t("errSelf") : t("errLast")}</p>}
-        <div className="flex w-[900px] flex-col gap-5 rounded-bf-16 bg-surface p-6 text-[15px] text-text">
+        {sp.granted && <p className="w-full max-w-[900px] rounded-bf-12 border border-line bg-surface p-3 text-body text-accent">{t("granted")}</p>}
+        {sp.error && <p className="w-full max-w-[900px] rounded-bf-12 border border-line bg-surface p-3 text-body text-chart">{sp.error === "self" ? t("errSelf") : t("errLast")}</p>}
+        <div className="flex w-full max-w-[900px] flex-col gap-5 rounded-bf-16 bg-surface p-6 text-[15px] text-text">
           {admins.map((a) => (
             <div key={a.id} className="flex items-center gap-3">
               <p className="flex-1">{`${a.name} · ${a.email} · ${t("role")} · ${t("active")}${a.id === me.id ? ` · ${t("you")}` : ""}`}</p>

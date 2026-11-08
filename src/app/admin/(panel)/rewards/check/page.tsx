@@ -43,7 +43,7 @@ export default async function VoucherCheckPage({ searchParams }: PageProps<"/adm
           <h1 className="text-[28px] font-bold leading-normal text-text">{t("title")}</h1>
           <p className="text-[15px] text-muted">{t("body")}</p>
         </div>
-        <AdminPanel className="w-[900px] gap-5 p-6">
+        <AdminPanel className="w-full max-w-[900px] gap-5 p-6">
           <form className="flex items-end gap-3" action="/admin/rewards/check">
             <div className="flex-1">
               <Field label={t("code")} name="code" defaultValue={raw} placeholder="BF–50–AB2C" autoComplete="off" autoCapitalize="characters" spellCheck={false} />
@@ -64,7 +64,7 @@ export default async function VoucherCheckPage({ searchParams }: PageProps<"/adm
                 {state === "redeemed" && found.voucher.redeemedAt ? t("statusRedeemed", { date: dayMonth(found.voucher.redeemedAt, locale) }) : t(`status.${state}`)}
               </p>
               {state === "valid" && (
-                <form action={redeemVoucherAdminAction} className="w-[310px]">
+                <form action={redeemVoucherAdminAction} className="w-full sm:w-[310px]">
                   <input type="hidden" name="voucherId" value={found.voucher.id} />
                   <input type="hidden" name="code" value={found.voucher.code} />
                   <SubmitButton>{t("redeem")}</SubmitButton>
@@ -73,7 +73,7 @@ export default async function VoucherCheckPage({ searchParams }: PageProps<"/adm
             </div>
           )}
         </AdminPanel>
-        <div className="w-[310px]">
+        <div className="w-full sm:w-[310px]">
           <ButtonLink href="/admin" className="!h-[52px] !bg-primary !font-bold !text-on-primary">
             {t("backHome")}
           </ButtonLink>

@@ -44,12 +44,12 @@ export default async function WinnersPage({ searchParams }: PageProps<"/admin/pa
       <AdminHeader crumb={c("crumb")} back="/admin/participants" />
       <AdminBody>
         <SimpleTitle title={t("title")} body={t("body")} />
-        <div className="flex w-[900px] flex-col gap-5 rounded-bf-16 bg-surface p-6 text-[15px] text-text">
+        <div className="flex w-full max-w-[900px] flex-col gap-5 rounded-bf-16 bg-surface p-6 text-[15px] text-text">
           {(t.raw("rules") as string[]).map((line) => (
             <p key={line}>{line}</p>
           ))}
         </div>
-        <form className="flex w-[900px] items-end gap-3" action="/admin/participants/winners">
+        <form className="flex w-full max-w-[900px] flex-col gap-3 sm:flex-row sm:items-end" action="/admin/participants/winners">
           <label className="flex flex-1 flex-col gap-2">
             <span className="text-label text-text">{t("campaign")}</span>
             <select name="campaign" defaultValue={selected?.id} className={box}>
@@ -65,13 +65,13 @@ export default async function WinnersPage({ searchParams }: PageProps<"/admin/pa
           </button>
         </form>
         {selected && (
-          <form action={saveWinnersAction} className="flex w-[900px] flex-col gap-5 rounded-bf-16 border border-line bg-surface p-6">
+          <form action={saveWinnersAction} className="flex w-full max-w-[900px] flex-col gap-5 rounded-bf-16 border border-line bg-surface p-6">
             <input type="hidden" name="challengeId" value={selected.id} />
             {approved.length === 0 && <p className="text-body text-muted">{t("noApproved")}</p>}
             {categories.map((cat) => {
               const w = winners.find((x) => x.category === cat);
               return (
-                <div key={cat} className="grid grid-cols-2 gap-4">
+                <div key={cat} className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <label className="flex flex-col gap-2">
                     <span className="text-label text-text">{t(`cat.${cat}`)}</span>
                     <select name={cat} defaultValue={w?.submissionId ?? ""} disabled={Boolean(w?.confirmedAt)} className={box}>
@@ -90,7 +90,7 @@ export default async function WinnersPage({ searchParams }: PageProps<"/admin/pa
                 </div>
               );
             })}
-            <div className="w-[310px]">
+            <div className="w-full sm:w-[310px]">
               <SubmitButton className="!h-[52px] !bg-primary !font-bold !text-on-primary">{t("next")}</SubmitButton>
             </div>
           </form>

@@ -40,7 +40,7 @@ export default async function AdminDashboard() {
           body={t("body")}
           action={<ButtonLink href="/admin/campaigns/new">{t("create")}</ButtonLink>}
         />
-        <div className="flex gap-4">
+        <div className="grid grid-cols-2 gap-3 lg:flex lg:gap-4">
           <StatCard href="/admin/campaigns" icon="/figma/admin/stat-campaign-16.svg" label={t("active")} value={String(stats.active)} sub={t("today")} />
           <StatCard
             href="/admin/participants"

@@ -26,7 +26,7 @@ export function FoundPostForm({ options, labels }: { options: { value: string; l
       </label>
       <Field label={labels.url} name="url" type="url" placeholder="https://www.tiktok.com/@…/video/…" error={state?.error === "url" ? labels.errors.url : undefined} />
       <Field label={labels.caption} name="caption" placeholder="#BeFamous #SecretCoffee" />
-      <div className="w-[240px]">
+      <div className="w-full sm:w-[240px]">
         <Button type="submit" disabled={pending}>
           {labels.submit}
         </Button>

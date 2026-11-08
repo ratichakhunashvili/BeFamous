@@ -29,7 +29,7 @@ export default async function AdminSettingsPage({ searchParams }: PageProps<"/ad
       <AdminHeader crumb={c("crumb")} back={saved ? "/admin/settings" : undefined} />
       <AdminBody>
         <AdminTitle eyebrow={t("eyebrow")} title={saved ? t("savedTitle") : t("title")} body={t("body")} />
-        <div className="flex w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6">
+        <div className="flex w-full max-w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6">
           <h2 className="text-h3 text-text">{t("profile")}</h2>
           {saved ? (
             <>
@@ -48,7 +48,7 @@ export default async function AdminSettingsPage({ searchParams }: PageProps<"/ad
           )}
         </div>
         {!saved && (
-          <div className="flex w-[660px] flex-col gap-3 rounded-bf-16 bg-surface p-5">
+          <div className="flex w-full max-w-[660px] flex-col gap-3 rounded-bf-16 bg-surface p-5">
             <h2 className="text-h3 text-text">{t("pages")}</h2>
             {pages.map((p) => (
               <Link key={p.href} href={p.href} className="flex h-11 items-center rounded-bf-8 bg-elevated pl-3 text-[14px] text-text transition-colors hover:bg-elevated/70">
