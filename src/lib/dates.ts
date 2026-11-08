@@ -33,3 +33,11 @@ export function daysAgo(d: Date, now = new Date()) {
   const ms = (x: string) => Date.UTC(Number(x.slice(0, 4)), Number(x.slice(5, 7)) - 1, Number(x.slice(8, 10)));
   return Math.round((ms(tbilisiDay(now)) - ms(tbilisiDay(d))) / 86_400_000);
 }
+
+/** "1–30 ნოემბერი" (same month) or "28 ოქტომბერი – 5 ნოემბერი". */
+export function dateRange(start: Date | null, end: Date | null, locale: Locale) {
+  if (!start || !end) return "—";
+  const fmt = (d: Date, o: Intl.DateTimeFormatOptions) => new Intl.DateTimeFormat(locale === "en" ? "en-GB" : "ka-GE", { timeZone: "Asia/Tbilisi", ...o }).format(d);
+  const sameMonth = fmt(start, { month: "numeric", year: "numeric" }) === fmt(end, { month: "numeric", year: "numeric" });
+  return sameMonth ? `${fmt(start, { day: "numeric" })}–${dayMonth(end, locale)}` : `${dayMonth(start, locale)} – ${dayMonth(end, locale)}`;
+}

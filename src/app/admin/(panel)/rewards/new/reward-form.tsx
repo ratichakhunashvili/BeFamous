@@ -10,7 +10,7 @@ export function RewardForm({ challenges, labels }: { challenges: { value: string
   const v = state?.values ?? {};
   const err = (k: string) => (state?.fieldErrors?.[k] ? labels.invalid : undefined);
   return (
-    <form action={action} className="flex w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6" noValidate>
+    <form key={state ? JSON.stringify(state) : "initial"} action={action} className="flex w-[768px] flex-col gap-4 rounded-bf-16 border border-line bg-surface p-6" noValidate>
       <h2 className="text-h3 text-text">{labels.heading}</h2>
       <Field label={labels.titleKa} name="titleKa" defaultValue={v.titleKa} placeholder="20 ₾ ყავის ვაუჩერი" required error={err("titleKa")} />
       <Field label={labels.titleEn} name="titleEn" defaultValue={v.titleEn} placeholder="20 ₾ coffee voucher" required error={err("titleEn")} />

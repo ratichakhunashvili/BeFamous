@@ -14,7 +14,7 @@ export function ProfileForm({ initial, cities, labels }: { initial: { name: stri
   const box = "w-full rounded-bf-12 border border-line bg-surface px-[15px] text-body text-white outline-none focus:ring-2 focus:ring-inset focus:ring-primary/60";
 
   return (
-    <form action={action} className="flex w-full flex-col gap-5" noValidate>
+    <form key={state ? JSON.stringify(state) : "initial"} action={action} className="flex w-full flex-col gap-5" noValidate>
       <Field label={labels.name} name="name" defaultValue={v.name} maxLength={80} required autoComplete="name" error={err.name ? labels.errors.name : undefined} />
       <label className="flex w-full flex-col gap-2">
         <span className="text-label text-white">{labels.location}</span>

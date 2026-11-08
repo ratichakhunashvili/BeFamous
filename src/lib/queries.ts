@@ -1,6 +1,7 @@
 // Read-only database queries used by pages (server only).
 import "server-only";
 import { and, asc, count, eq, ilike, inArray, or, sql } from "drizzle-orm";
+import { syncChallengeStatuses } from "@/lib/admin-campaigns";
 import { db, schema } from "@/db";
 
 const { challenges, participations, missions, missionProgress, interests, userInterests, challengeLevels } = schema;
@@ -16,6 +17,7 @@ export async function getUserInterestIds(userId: string) {
 
 /** Public challenges (active or scheduled), with participant counts. Optional filters by interest slugs and text. */
 export async function listChallenges(opts: { interestSlugs?: string[]; q?: string; city?: string } = {}) {
+  await syncChallengeStatuses(); // scheduled campaigns go live on their start date
   const filters = [inArray(challenges.status, ["active", "scheduled"])];
   if (opts.interestSlugs?.length) {
     const ids = await db.select({ id: interests.id }).from(interests).where(inArray(interests.slug, opts.interestSlugs));
@@ -40,6 +42,7 @@ export async function listChallenges(opts: { interestSlugs?: string[]; q?: strin
 }
 
 export async function getChallengeBySlug(slug: string) {
+  await syncChallengeStatuses();
   const challenge = await db.query.challenges.findFirst({ where: eq(challenges.slug, slug) });
   if (!challenge || challenge.status === "draft") return null; // drafts exist only in the admin
   const [{ value: participants }] = await db.select({ value: count() }).from(participations).where(eq(participations.challengeId, challenge.id));

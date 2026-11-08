@@ -9,7 +9,7 @@ export function FoundPostForm({ options, labels }: { options: { value: string; l
   const [state, action, pending] = useActionState(addFoundPostAction, undefined);
   const box = "h-12 w-full rounded-bf-12 border border-line bg-surface px-[15px] text-body text-text outline-none focus:ring-2 focus:ring-inset focus:ring-primary/60";
   return (
-    <form action={action} className="grid max-w-[720px] gap-4" noValidate>
+    <form key={state ? JSON.stringify(state) : "initial"} action={action} className="grid max-w-[720px] gap-4" noValidate>
       <label className="flex flex-col gap-2">
         <span className="text-label text-text">{labels.participant}</span>
         <select name="participationId" defaultValue="" className={box}>
