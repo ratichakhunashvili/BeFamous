@@ -4,6 +4,9 @@ import { getTranslations } from "next-intl/server";
 import { AppBar, CurvesBackdrop, PageTitle, Screen } from "@/components/ui";
 import { getMissionContext } from "@/lib/queries";
 import { requireUser } from "@/lib/session";
+import { testCheckinAction } from "@/app/actions/test-tools";
+import { SubmitButton } from "@/components/submit-button";
+import { isTestAccount } from "@/lib/test-mode";
 import { QrScanner } from "./qr-scanner";
 
 export default async function QrPage({ params, searchParams }: PageProps<"/missions/[id]/qr">) {
@@ -37,6 +40,13 @@ export default async function QrPage({ params, searchParams }: PageProps<"/missi
             check: t("check"),
           }}
         />
+        {/* TEMPORARY: test account only (checked again on the server) */}
+        {isTestAccount(user.email) && (
+          <form action={testCheckinAction} className="w-full">
+            <input type="hidden" name="missionId" value={id} />
+            <SubmitButton variant="secondary">ტესტი: QR-ის დადასტურება სკანირების გარეშე</SubmitButton>
+          </form>
+        )}
       </CurvesBackdrop>
     </Screen>
   );

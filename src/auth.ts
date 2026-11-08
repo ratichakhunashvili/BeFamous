@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { db, schema } from "@/db";
+import { TEST_ACCOUNT, testModeEnabled } from "@/lib/test-mode";
 
 const credentialsSchema = z.object({
   email: z.string().trim().toLowerCase().email(),
@@ -34,6 +35,8 @@ export const {
         // Compare even when the user is missing, so response time doesn't reveal which emails exist.
         const ok = await bcrypt.compare(parsed.data.password, user?.passwordHash ?? "$2a$12$invalidinvalidinvalidinvalidinvalidinvalidinvalidinv");
         if (!user || !ok || user.deletedAt) throw new InvalidLogin();
+        // Temporary test account: refused unless local test mode is on (never on the live site).
+        if (user.email === TEST_ACCOUNT.email && !testModeEnabled()) throw new InvalidLogin();
         return { id: user.id, name: user.name, email: user.email };
       },
     }),
