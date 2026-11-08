@@ -197,7 +197,7 @@ export const checkins = pgTable(
 );
 
 // ---------- Work uploads / review ----------
-export const submissionStatusEnum = pgEnum("submission_status", ["pending", "approved", "revision", "rejected"]);
+export const submissionStatusEnum = pgEnum("submission_status", ["draft", "pending", "approved", "revision", "rejected"]);
 
 export const submissions = pgTable(
   "submissions",
@@ -205,9 +205,13 @@ export const submissions = pgTable(
     id: id(),
     userId: uuid("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
     missionId: uuid("mission_id").notNull().references(() => missions.id, { onDelete: "cascade" }),
-    mediaUrl: text("media_url").notNull(),
-    mediaType: text("media_type").notNull(), // "image" | "video"
-    caption: text("caption"),
+    // Work is submitted as a link to the user's TikTok / Instagram post (screens 13 → 41 → 42)
+    mediaUrl: text("media_url").notNull(), // the post URL
+    mediaType: text("media_type").notNull(), // "post" (link) — file uploads can use "video" | "image"
+    platform: text("platform"), // "tiktok" | "instagram"
+    handle: text("handle"), // e.g. "@nino.creates"
+    thumbnailUrl: text("thumbnail_url"), // from the platform's public preview (TikTok oEmbed)
+    caption: text("caption"), // post caption, used for the hashtag check
     status: submissionStatusEnum("status").notNull().default("pending"),
     reviewerId: uuid("reviewer_id").references(() => users.id, { onDelete: "set null" }),
     reviewNote: text("review_note"),

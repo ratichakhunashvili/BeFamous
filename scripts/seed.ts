@@ -4,6 +4,7 @@
 import { config } from "dotenv";
 config({ path: ".env.local" });
 
+import { randomBytes } from "node:crypto";
 import { Pool } from "@neondatabase/serverless";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-serverless";
@@ -55,6 +56,16 @@ async function main() {
     }
   }
   console.log(`Challenges: ${challengeSeed.length}`);
+
+  // One QR code per visit mission (admins create more in the admin panel).
+  const visitMissions = await db.select({ id: schema.missions.id }).from(schema.missions).where(eq(schema.missions.type, "visit_qr"));
+  for (const m of visitMissions) {
+    const has = await db.query.qrCodes.findFirst({ where: eq(schema.qrCodes.missionId, m.id) });
+    if (has) continue;
+    const code = `CAFE-${randomBytes(4).toString("hex").toUpperCase()}`;
+    await db.insert(schema.qrCodes).values({ missionId: m.id, code, label: "ქარხანა Coffee — სალარო" });
+    console.log(`QR code created (dev): /qr/${code}`);
+  }
   await pool.end();
 }
 

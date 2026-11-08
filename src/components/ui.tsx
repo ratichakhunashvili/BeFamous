@@ -135,6 +135,19 @@ export function Panel({ children, className = "" }: { children: ReactNode; class
   return <div className={`overflow-clip rounded-bf-16 border border-line bg-surface ${className}`}>{children}</div>;
 }
 
+/** Status panel: 52px icon tile + H2 + body (39, 40, 14, 15, 16, 42). */
+export function ResultPanel({ icon, title, body, centerTitle = false }: { icon: string; title: string; body: string; centerTitle?: boolean }) {
+  return (
+    <Panel className="flex w-full flex-col gap-5 p-6 text-white">
+      <span className="relative size-[52px] overflow-clip rounded-bf-16 bg-elevated">
+        <Image src={icon} alt="" width={26} height={26} className="absolute left-[13px] top-[13px] size-[26px]" />
+      </span>
+      <h1 className={`text-h2 ${centerTitle ? "text-center" : ""}`}>{title}</h1>
+      <p className="text-body">{body}</p>
+    </Panel>
+  );
+}
+
 /** Fixed bottom action bar with one primary action (09, 10, 37). */
 export function StickyBar({ children }: { children: ReactNode }) {
   return <div className="fixed inset-x-0 bottom-0 z-20 mx-auto w-full max-w-[390px] border-t border-line bg-surface px-5 pb-[14px] pt-[14px]">{children}</div>;

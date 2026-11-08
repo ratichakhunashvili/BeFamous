@@ -14,7 +14,6 @@ type Props = {
 
 export function FiltersForm({ initial, cities, categories, labels }: Props) {
   const [category, setCategory] = useState(initial.category);
-  const [city, setCity] = useState(initial.city);
   const box = "relative block h-12 w-full overflow-clip rounded-bf-12 border border-line bg-surface";
 
   return (
@@ -27,20 +26,15 @@ export function FiltersForm({ initial, cities, categories, labels }: Props) {
         </span>
       </label>
 
-      {/* Location: native select styled as the Figma box (screen 53's list comes in a later phase). */}
-      <label className="flex flex-col gap-2">
+      {/* Location → 53 (the chosen city is saved on the profile and passed back here). */}
+      <div className="flex flex-col gap-2">
         <span className="text-label text-white">{labels.location}</span>
-        <span className={box}>
-          <select name="city" value={city} onChange={(e) => setCity(e.target.value)} className="h-full w-full appearance-none bg-transparent pl-[15px] pr-12 text-body text-white outline-none focus:ring-2 focus:ring-inset focus:ring-primary/60">
-            {cities.map((c) => (
-              <option key={c.id} value={c.id} className="bg-surface">
-                {c.label}
-              </option>
-            ))}
-          </select>
-          <Image src="/figma/icon-chevron-24.svg" alt="" width={24} height={24} className="pointer-events-none absolute right-[13px] top-[11px] size-6" />
-        </span>
-      </label>
+        <Link href="/location" className={`${box} hover:bg-elevated/60`}>
+          <span className="absolute left-[15px] top-3 text-body text-white">{cities.find((c) => c.id === initial.city)?.label}</span>
+          <Image src="/figma/icon-chevron-24.svg" alt="" width={24} height={24} className="absolute right-[13px] top-[11px] size-6" />
+        </Link>
+        <input type="hidden" name="city" value={initial.city} />
+      </div>
 
       <input type="hidden" name="category" value={category} />
       {categories.map((c) => {

@@ -54,6 +54,19 @@ export async function getParticipation(userId: string, challengeId: string) {
   });
 }
 
+/** For mission pages: the mission, its challenge, its 2-digit number, and whether the user joined. */
+export async function getMissionContext(userId: string, missionId: string) {
+  if (!/^[0-9a-f-]{36}$/i.test(missionId)) return null;
+  const mission = await db.query.missions.findFirst({ where: eq(missions.id, missionId) });
+  if (!mission) return null;
+  const challenge = await db.query.challenges.findFirst({ where: eq(challenges.id, mission.challengeId) });
+  if (!challenge) return null;
+  const joined = Boolean(await getParticipation(userId, challenge.id));
+  const siblings = await db.select({ id: missions.id, required: missions.required }).from(missions).where(eq(missions.challengeId, challenge.id)).orderBy(asc(missions.position));
+  const number = String(siblings.findIndex((m) => m.id === mission.id) + 1).padStart(2, "0");
+  return { mission, challenge, joined, number, siblings };
+}
+
 /** Missions of a challenge with this user's progress status for each. */
 export async function getMissionsWithProgress(userId: string, challengeId: string) {
   return db
