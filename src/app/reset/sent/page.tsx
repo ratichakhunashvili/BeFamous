@@ -10,7 +10,7 @@ export default async function ResetSentPage({ searchParams }: PageProps<"/reset/
 
   return (
     <Screen>
-      <AppBar back="history" brandLabel={c("brand")} />
+      <AppBar back="/signin" brandLabel={c("brand")} />
       <CurvesBackdrop>
         <section className="flex w-full flex-col gap-5 overflow-clip rounded-bf-16 border border-line bg-surface p-6">
           <span className="relative size-[52px] overflow-clip rounded-bf-16 bg-elevated">

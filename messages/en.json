@@ -78,5 +78,118 @@
   "pending": {
     "title": "Coming soon",
     "body": "This screen is built in a later phase."
+  },
+  "nav": {
+    "home": "Home",
+    "discover": "Search",
+    "activity": "Activity",
+    "rewards": "Rewards",
+    "profile": "Profile",
+    "search": "Search",
+    "notifications": "Notifications"
+  },
+  "interests": {
+    "eyebrow": "03 / Personalisation",
+    "title": "What are you into?",
+    "body": "We use your interests to show challenges that suit you.",
+    "tap": "Tap to select",
+    "selected": "Selected",
+    "finish": "Finish profile",
+    "skip": "Skip for now"
+  },
+  "home": {
+    "eyebrow": "Your space  /  {date}",
+    "greeting": "Hi, {name}!",
+    "body": "Discover challenges that match your interests.",
+    "totalXp": "Total XP",
+    "level": "Level {level}",
+    "streak": "Activity streak",
+    "days": "{count} days",
+    "best": "Best: {count} days",
+    "featured": "Featured challenge",
+    "seeAll": "See all",
+    "badges": "My badges",
+    "badgesMeta": "{collections} collections · {levels} levels"
+  },
+  "discover": {
+    "eyebrow": "Discover",
+    "title": "Find your challenge",
+    "body": "Fashion, coffee, tech and more.",
+    "search": "Search",
+    "placeholder": "e.g. coffee challenge",
+    "all": "All",
+    "filter": "Filter",
+    "results": "{count} results {city}",
+    "resultsAll": "{count} results",
+    "searchTitle": "Search results",
+    "clear": "Clear filter",
+    "empty": "No challenges for this selection yet"
+  },
+  "filters": {
+    "eyebrow": "Discover  /  Search",
+    "title": "Search & filter",
+    "body": "Filter by category or location.",
+    "keyword": "Search term",
+    "keywordPlaceholder": "coffee",
+    "location": "Location",
+    "anyCity": "Any city",
+    "selectedCategory": "Selected category",
+    "tapCategory": "Tap to select",
+    "noChallenges": "No challenges for this selection yet",
+    "show": "Show results",
+    "clear": "Clear"
+  },
+  "cities": {
+    "tbilisi": "Tbilisi",
+    "batumi": "Batumi",
+    "kutaisi": "Kutaisi",
+    "outside": "Outside the city"
+  },
+  "citiesIn": {
+    "tbilisi": "in Tbilisi",
+    "batumi": "in Batumi",
+    "kutaisi": "in Kutaisi",
+    "outside": "outside the city"
+  },
+  "challenge": {
+    "xp": "Experience",
+    "afterMissions": "after missions",
+    "reward": "Reward",
+    "howTo": "How do I take part?",
+    "join": "Join the challenge",
+    "continue": "Continue missions"
+  },
+  "rules": {
+    "eyebrow": "{title}  ·  sample",
+    "title": "Campaign rules",
+    "body": "Final terms are set by the campaign organiser.",
+    "ok": "Got it",
+    "full": "Full terms"
+  },
+  "join": {
+    "eyebrow": "Challenge  /  Joining",
+    "title": "Before you start",
+    "body": "Check the terms and start the mission.",
+    "ownTitle": "The content is yours",
+    "ownBody": "Only publish video you filmed yourself.",
+    "reviewTitle": "Review",
+    "reviewBody": "XP is added once your entry is approved.",
+    "termsTitle": "Full terms",
+    "termsBody": "Consent to take part",
+    "notNow": "Not now",
+    "start": "Start taking part"
+  },
+  "missions": {
+    "title": "Missions",
+    "body": "Complete both required steps.",
+    "progress": "Your progress",
+    "done": "Completed",
+    "required": "Required",
+    "optional": "Bonus mission",
+    "completed": "Completed",
+    "pending": "Under review",
+    "videoEyebrow": "Challenge  /  Mission",
+    "whereTitle": "Where to post",
+    "register": "Register your post"
   }
 }

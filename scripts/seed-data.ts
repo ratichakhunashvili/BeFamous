@@ -1,0 +1,156 @@
+// Starter content taken from the Figma frames (Georgian copy verbatim; English written to match).
+// Admins will manage this content from the admin panel in Phase 6.
+
+export const interestSeed = [
+  { slug: "cafes", nameKa: "კაფეები და კულინარია", nameEn: "Cafés & cooking", chipKa: "კაფეები", chipEn: "Cafés", resultsTitleKa: "კაფეების გამოწვევები", resultsTitleEn: "Café challenges", icon: "/figma/icon-coffee.svg", sortOrder: 1 },
+  { slug: "fashion", nameKa: "მოდა და სტილი", nameEn: "Fashion & style", chipKa: "მოდა", chipEn: "Fashion", resultsTitleKa: "მოდის გამოწვევები", resultsTitleEn: "Fashion challenges", icon: "/figma/icon-fashion.svg", sortOrder: 2 },
+  { slug: "tech", nameKa: "ტექნოლოგია", nameEn: "Technology", chipKa: "ტექნოლოგია", chipEn: "Technology", resultsTitleKa: "ტექნოლოგიის გამოწვევები", resultsTitleEn: "Tech challenges", icon: "/figma/icon-tech.svg", sortOrder: 3 },
+  { slug: "beauty", nameKa: "სილამაზე", nameEn: "Beauty", chipKa: "სილამაზე", chipEn: "Beauty", resultsTitleKa: "სილამაზის გამოწვევები", resultsTitleEn: "Beauty challenges", icon: "/figma/icon-beauty.svg", sortOrder: 4 },
+];
+
+const rulesStep = { icon: "/figma/icon-activity.svg", titleKa: "გაეცანი პირობებს", titleEn: "Read the rules", captionKa: "მონაწილეობა უფასოა", captionEn: "Taking part is free", link: "rules" as const };
+const videoStep = { icon: "/figma/icon-camera-20.svg", titleKa: "გადაიღე მოკლე ვიდეო", titleEn: "Shoot a short video", captionKa: "MP4 / MOV · მაქს. 30 წამი", captionEn: "MP4 / MOV · max 30 seconds" };
+
+function rules(hashtags: string) {
+  return [
+    { icon: "/figma/icon-spark-20.svg", titleKa: "ჰეშთეგები", titleEn: "Hashtags", captionKa: hashtags, captionEn: hashtags },
+    { icon: "/figma/icon-clock-20.svg", titleKa: "ვადა", titleEn: "Deadline", captionKa: "კამპანიის პერიოდში · პოსტი საჯარო უნდა დარჩეს", captionEn: "During the campaign · the post must stay public" },
+    { icon: "/figma/icon-badge-20.svg", titleKa: "მთავარი პრიზი", titleEn: "Main prize", captionKa: "1 გამარჯვებული · 30 ყავა · ჟიურის შეფასებით", captionEn: "1 winner · 30 coffees · chosen by the jury" },
+    { icon: "/figma/icon-gift-20.svg", titleKa: "ჯილდო დამტკიცებულებს", titleEn: "Reward for approved entries", captionKa: "20-მდე დესერტის ვაუჩერი", captionEn: "Up to 20 dessert vouchers" },
+    { icon: "/figma/icon-check.svg", titleKa: "ერთი ჯილდო თითო ადამიანზე", titleEn: "One reward per person", captionKa: "ორ პლატფორმაზე გამოქვეყნებაც ერთ მონაწილეობად ითვლება", captionEn: "Posting on two platforms still counts as one entry" },
+  ];
+}
+
+const videoMission = (hashtags: string) => ({
+  key: "video",
+  type: "upload" as const,
+  titleKa: "კრეატიული ვიდეო",
+  titleEn: "Creative video",
+  descriptionKa: "გადაიღე ვიდეო, რომელიც გამოწვევის თემას ერგება.",
+  descriptionEn: "Shoot a video that fits the challenge theme.",
+  required: true,
+  config: { platformsKa: "TikTok ან Instagram", platformsEn: "TikTok or Instagram", hashtags, mediaType: "video", maxSeconds: 30 },
+});
+
+export const challengeSeed = [
+  {
+    slug: "secret-coffee-moment",
+    interest: "cafes",
+    kind: "visit",
+    titleKa: "Secret Coffee Moment",
+    titleEn: "Secret Coffee Moment",
+    brand: "ქარხანა Coffee",
+    categoryKa: "ᲙᲣᲚᲘᲜᲐᲠᲘᲐ",
+    categoryEn: "CULINARY",
+    descriptionKa: "მოამზადე მოკლე ვიდეო შენი საყვარელი ყავის მომენტით და გაგვიზიარე შენი ისტორია.",
+    descriptionEn: "Make a short video of your favourite coffee moment and share your story with us.",
+    xpReward: 250,
+    rewardKa: "50 ₾ ვაუჩერი",
+    rewardEn: "50 ₾ voucher",
+    hashtags: "#BeFamous #SecretCoffee",
+    coverUrl: "/figma/challenge-coffee-cover.png",
+    heroUrl: "/figma/coffee-media.jpg",
+    city: "tbilisi",
+    sortOrder: 1,
+    steps: [
+      rulesStep,
+      { icon: "/figma/icon-qr.svg", titleKa: "დაადასტურე ვიზიტი", titleEn: "Confirm your visit", captionKa: "QR კოდი პარტნიორ კაფეში", captionEn: "QR code at the partner café" },
+      { icon: "/figma/icon-upload-20.svg", titleKa: "გამოაქვეყნე შენს არხზე", titleEn: "Post on your channel", captionKa: "TikTok ან Instagram · #BeFamous", captionEn: "TikTok or Instagram · #BeFamous" },
+    ],
+    missions: [
+      {
+        key: "qr",
+        type: "visit_qr" as const,
+        titleKa: "QR ვიზიტი",
+        titleEn: "QR visit",
+        descriptionKa: "დაასკანერე კაფეს QR",
+        descriptionEn: "Scan the café's QR code",
+        required: true,
+        placeName: "ქარხანა Coffee",
+        config: {},
+      },
+      {
+        ...videoMission("#BeFamous #SecretCoffee"),
+        titleKa: "ვიდეო ნამუშევარი",
+        titleEn: "Video entry",
+        unlockAfter: "qr",
+        config: { ...videoMission("#BeFamous #SecretCoffee").config, lockedKa: "QR-ის დადასტურების შემდეგ", lockedEn: "After the QR check-in", descriptionCardKa: "ატვირთე ვიდეო", descriptionCardEn: "Upload your video" },
+      },
+      {
+        key: "invite",
+        type: "invite" as const,
+        titleKa: "მეგობრის მოწვევა",
+        titleEn: "Invite a friend",
+        descriptionKa: "სურვილისამებრ",
+        descriptionEn: "Optional",
+        required: false,
+        config: {},
+      },
+    ],
+  },
+  {
+    slug: "street-to-catwalk",
+    interest: "fashion",
+    kind: "video",
+    titleKa: "Street to Catwalk",
+    titleEn: "Street to Catwalk",
+    brand: "Tbilisi Streetwear",
+    categoryKa: "ᲛᲝᲓᲐ",
+    categoryEn: "FASHION",
+    descriptionKa: "აჩვენე, როგორ აქცევ ყოველდღიურ ლუქს ინდივიდუალური სტილის განაცხადად.",
+    descriptionEn: "Show how you turn an everyday look into a personal style statement.",
+    xpReward: 200,
+    rewardKa: "40 ₾ ვაუჩერი",
+    rewardEn: "40 ₾ voucher",
+    hashtags: "#BeFamous #StreetToCatwalk",
+    coverUrl: "/figma/fashion-media.jpg",
+    city: "tbilisi",
+    sortOrder: 2,
+    steps: [rulesStep, videoStep],
+    missions: [videoMission("#BeFamous #StreetToCatwalk")],
+  },
+  {
+    slug: "cyber-evolution",
+    interest: "tech",
+    kind: "video",
+    titleKa: "Cyber Evolution",
+    titleEn: "Cyber Evolution",
+    brand: "Studio Lab",
+    categoryKa: "ᲢᲔᲥᲜᲝᲚᲝᲒᲘᲐ",
+    categoryEn: "TECHNOLOGY",
+    descriptionKa: "გადაიღე მოკლე ვიდეო, სადაც შენი სამუშაო სივრცის საყვარელ დეტალს გვაჩვენებ.",
+    descriptionEn: "Shoot a short video showing your favourite detail of your workspace.",
+    xpReward: 180,
+    rewardKa: "ტექნიკის Mystery Box",
+    rewardEn: "Tech Mystery Box",
+    hashtags: "#BeFamous #CyberEvolution",
+    coverArt: { icon: "tech", kicker: "TECH CHALLENGE", label: "CYBER EVOLUTION" },
+    city: "tbilisi",
+    sortOrder: 3,
+    steps: [rulesStep, videoStep],
+    missions: [videoMission("#BeFamous #CyberEvolution")],
+  },
+  {
+    slug: "glow-mastery",
+    interest: "beauty",
+    kind: "video",
+    titleKa: "Glow Mastery",
+    titleEn: "Glow Mastery",
+    brand: "Glow Studio",
+    categoryKa: "ᲡᲘᲚᲐᲛᲐᲖᲔ",
+    categoryEn: "BEAUTY",
+    descriptionKa: "გაგვიზიარე მოვლის რუტინის ერთი ნაბიჯი და ახსენი, რატომ არის ის შენთვის მნიშვნელოვანი.",
+    descriptionEn: "Share one step of your care routine and explain why it matters to you.",
+    xpReward: 150,
+    rewardKa: "Beauty Box",
+    rewardEn: "Beauty Box",
+    hashtags: "#BeFamous #GlowMastery",
+    coverUrl: "/figma/beauty-media.jpg",
+    city: "tbilisi",
+    sortOrder: 4,
+    steps: [rulesStep, videoStep],
+    missions: [videoMission("#BeFamous #GlowMastery")],
+  },
+];
+
+export { rules as rulesFor };

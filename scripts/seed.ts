@@ -1,12 +1,15 @@
-// Creates (or updates) the admin account from ADMIN_EMAIL / ADMIN_PASSWORD in .env.local.
+// Seeds the admin account (from .env.local) and the starter content (interests, challenges, missions).
+// Safe to run repeatedly: existing rows are updated, missions are only created once per challenge.
 // Run with: npm run db:seed
 import { config } from "dotenv";
 config({ path: ".env.local" });
 
 import { Pool } from "@neondatabase/serverless";
+import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import bcrypt from "bcryptjs";
 import * as schema from "../src/db/schema";
+import { challengeSeed, interestSeed, rulesFor } from "./seed-data";
 
 async function main() {
   const email = process.env.ADMIN_EMAIL?.toLowerCase();
@@ -15,14 +18,43 @@ async function main() {
 
   const pool = new Pool({ connectionString: process.env.DATABASE_URL });
   const db = drizzle(pool, { schema });
-  const passwordHash = await bcrypt.hash(password, 12);
 
+  // Admin
+  const passwordHash = await bcrypt.hash(password, 12);
   await db
     .insert(schema.users)
     .values({ name: "Admin", email, passwordHash, role: "admin", termsAcceptedAt: new Date() })
     .onConflictDoUpdate({ target: schema.users.email, set: { role: "admin", passwordHash } });
-
   console.log(`Admin ready: ${email}`);
+
+  // Interests
+  const interestIds: Record<string, string> = {};
+  for (const i of interestSeed) {
+    const [row] = await db.insert(schema.interests).values(i).onConflictDoUpdate({ target: schema.interests.slug, set: i }).returning({ id: schema.interests.id });
+    interestIds[i.slug] = row.id;
+  }
+  console.log(`Interests: ${interestSeed.length}`);
+
+  // Challenges + missions
+  for (const c of challengeSeed) {
+    const { missions, interest, ...fields } = c;
+    const values = { ...fields, interestId: interestIds[interest], status: "active" as const, rules: rulesFor(c.hashtags) };
+    const [row] = await db.insert(schema.challenges).values(values).onConflictDoUpdate({ target: schema.challenges.slug, set: values }).returning({ id: schema.challenges.id });
+
+    const existing = await db.select({ id: schema.missions.id }).from(schema.missions).where(eq(schema.missions.challengeId, row.id));
+    if (existing.length === 0) {
+      const idsByKey: Record<string, string> = {};
+      for (const [index, m] of missions.entries()) {
+        const { key, unlockAfter, ...mission } = m as typeof m & { unlockAfter?: string };
+        const [inserted] = await db
+          .insert(schema.missions)
+          .values({ ...mission, challengeId: row.id, position: index + 1, unlockAfterMissionId: unlockAfter ? idsByKey[unlockAfter] : null })
+          .returning({ id: schema.missions.id });
+        idsByKey[key] = inserted.id;
+      }
+    }
+  }
+  console.log(`Challenges: ${challengeSeed.length}`);
   await pool.end();
 }
 

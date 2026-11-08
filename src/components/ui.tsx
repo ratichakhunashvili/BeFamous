@@ -82,16 +82,17 @@ export function InfoRow({
   body: string;
   href?: string;
   chevron?: string;
-  /** "start" = left-aligned with 4px gap (02); "centered" = centred with 20px gap (04, 31, 73) as drawn in Figma. */
-  layout?: "start" | "centered";
+  /** "start" = left-aligned with 4px gap (02); "centered" = centred with 20px gap (04, 31, 73);
+   *  "titleCentered" = centred title, left-aligned caption (10/37 first rows) — as drawn in Figma. */
+  layout?: "start" | "centered" | "titleCentered";
 }) {
   const content = (
     <>
       <span className="relative size-9 shrink-0 overflow-clip rounded-bf-12 bg-elevated">
         <Image src={icon} alt="" width={20} height={20} className="absolute left-2 top-2 size-5" />
       </span>
-      <span className={`flex min-w-0 flex-1 flex-col text-white ${layout === "centered" ? "gap-5 text-center" : "gap-1 text-left"}`}>
-        <span className="text-label">{title}</span>
+      <span className={`flex min-w-0 flex-1 flex-col text-white ${layout === "centered" ? "gap-5 text-center" : layout === "titleCentered" ? "gap-5" : "gap-1 text-left"}`}>
+        <span className={`whitespace-pre-wrap text-label ${layout === "titleCentered" ? "text-center" : ""}`}>{title}</span>
         <span className="text-caption">{body}</span>
       </span>
       {chevron && <Image src={chevron} alt="" width={16} height={16} className="size-4 shrink-0" />}
@@ -107,23 +108,42 @@ export function InfoRow({
   );
 }
 
-/** Eyebrow + H2 title + body, as in every "Page title" block. */
-export function PageTitle({ eyebrow, title, body, align = "center", gap = 20 }: { eyebrow: string; title: string; body: string; align?: "center" | "start" | "mixed"; gap?: 8 | 20 }) {
-  const t = align === "center" ? "text-center" : "text-left";
-  const side = align === "mixed" ? "text-center" : t;
+/**
+ * Eyebrow + H2 title + body ("Page title" block). Figma mixes alignments per line, so presets are
+ * listed as [eyebrow, title, body]: center = c,c,c · start = l,l,l · terms = c,l,c (31/73) · bodyStart = c,c,l (05/08/38).
+ */
+const titleAligns = {
+  center: ["text-center", "text-center", "text-center"],
+  start: ["text-left", "text-left", "text-left"],
+  terms: ["text-center", "text-left", "text-center"],
+  bodyStart: ["text-center", "text-center", "text-left"],
+} as const;
+
+export function PageTitle({ eyebrow, title, body, align = "center", gap = 20 }: { eyebrow: string; title: string; body: string; align?: keyof typeof titleAligns; gap?: 8 | 20 }) {
+  const [e, t, b] = titleAligns[align];
   return (
     <div className={`flex w-full flex-col text-white ${gap === 8 ? "gap-2" : "gap-5"}`}>
-      <p className={`whitespace-pre-wrap text-caption ${side}`}>{eyebrow}</p>
+      <p className={`whitespace-pre-wrap text-caption ${e}`}>{eyebrow}</p>
       <h1 className={`text-h2 ${t}`}>{title}</h1>
-      <p className={`text-body ${side}`}>{body}</p>
+      <p className={`text-body ${b}`}>{body}</p>
     </div>
   );
 }
 
+/** Bordered surface card (Figma "Panel"). */
+export function Panel({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <div className={`overflow-clip rounded-bf-16 border border-line bg-surface ${className}`}>{children}</div>;
+}
+
+/** Fixed bottom action bar with one primary action (09, 10, 37). */
+export function StickyBar({ children }: { children: ReactNode }) {
+  return <div className="fixed inset-x-0 bottom-0 z-20 mx-auto w-full max-w-[390px] border-t border-line bg-surface px-5 pb-[14px] pt-[14px]">{children}</div>;
+}
+
 /** Auth-style screen: purple curves behind, solid content panel starting 58px below the app bar. */
-export function CurvesBackdrop({ children }: { children: ReactNode }) {
+export function CurvesBackdrop({ children, clearance = 0 }: { children: ReactNode; /** extra bottom space for a sticky bar / bottom nav */ clearance?: number }) {
   return (
-    <main className="relative min-h-[754px] pt-[58px]">
+    <main className="relative min-h-[754px] pt-[58px]" style={{ paddingBottom: clearance }}>
       {/* Fixed 390×754 like the Figma layer, so it never stretches with taller content. */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[754px]" aria-hidden>
         <Image src="/figma/bg-curves.png" alt="" fill sizes="390px" className="object-fill" priority />

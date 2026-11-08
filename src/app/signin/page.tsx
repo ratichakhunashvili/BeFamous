@@ -13,7 +13,7 @@ export default async function SigninPage({ searchParams }: PageProps<"/signin">)
 
   return (
     <Screen>
-      <AppBar back="history" brandLabel={c("brand")} />
+      <AppBar back="/" brandLabel={c("brand")} />
       <CurvesBackdrop>
         <PageTitle eyebrow={t("eyebrow")} title={t("title")} body={t("body")} />
         {reset && <p className="w-full text-center text-caption text-accent">{t("resetDone")}</p>}

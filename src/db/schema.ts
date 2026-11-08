@@ -61,6 +61,10 @@ export const interests = pgTable("interests", {
   nameKa: text("name_ka").notNull(),
   nameEn: text("name_en").notNull(),
   icon: text("icon"),
+  chipKa: text("chip_ka"), // short filter-chip label, e.g. "კაფეები"
+  chipEn: text("chip_en"),
+  resultsTitleKa: text("results_title_ka"), // e.g. "კაფეების გამოწვევები"
+  resultsTitleEn: text("results_title_en"),
   sortOrder: integer("sort_order").notNull().default(0),
 });
 
@@ -86,9 +90,25 @@ export const challenges = pgTable("challenges", {
   rulesKa: text("rules_ka"),
   rulesEn: text("rules_en"),
   brand: text("brand"),
-  coverUrl: text("cover_url"),
+  coverUrl: text("cover_url"), // card image (home / discover)
+  heroUrl: text("hero_url"), // detail-page image (falls back to coverUrl)
   interestId: uuid("interest_id").references(() => interests.id),
   status: challengeStatusEnum("status").notNull().default("draft"),
+  city: text("city"), // e.g. "tbilisi", "batumi", "kutaisi", "outside"
+  // How joining works: "visit" (QR check-in then video, screen 10→11) or "video" (screen 37→38)
+  kind: text("kind").notNull().default("video"),
+  categoryKa: text("category_ka"), // eyebrow on detail, e.g. "ᲙᲣᲚᲘᲜᲐᲠᲘᲐ"
+  categoryEn: text("category_en"),
+  rewardKa: text("reward_ka"), // e.g. "50 ₾ ვაუჩერი"
+  rewardEn: text("reward_en"),
+  hashtags: text("hashtags"), // e.g. "#BeFamous #SecretCoffee"
+  // Drawn cover when there is no photo: { icon, kicker, label }
+  coverArt: jsonb("cover_art").$type<{ icon: string; kicker: string; label: string }>(),
+  // "How to take part" rows on the detail screen
+  steps: jsonb("steps").$type<{ icon: string; titleKa: string; titleEn: string; captionKa: string; captionEn: string; link?: "rules" }[]>(),
+  // Campaign rules rows (screen 65)
+  rules: jsonb("rules").$type<{ icon: string; titleKa: string; titleEn: string; captionKa: string; captionEn: string }[]>(),
+  sortOrder: integer("sort_order").notNull().default(0),
   startsAt: timestamp("starts_at", { withTimezone: true }),
   endsAt: timestamp("ends_at", { withTimezone: true }),
   xpReward: integer("xp_reward").notNull().default(0),
@@ -117,6 +137,9 @@ export const missions = pgTable("missions", {
   descriptionEn: text("description_en"),
   xpReward: integer("xp_reward").notNull().default(0),
   position: integer("position").notNull().default(0),
+  required: boolean("required").notNull().default(true), // optional missions don't count toward progress
+  // Locked until this mission is completed (e.g. video unlocks after QR visit)
+  unlockAfterMissionId: uuid("unlock_after_mission_id"),
   // Location for visit missions
   placeName: text("place_name"),
   lat: doublePrecision("lat"),

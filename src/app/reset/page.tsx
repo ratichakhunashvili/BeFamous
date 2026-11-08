@@ -8,7 +8,7 @@ export default async function ResetPage() {
   const c = await getTranslations("common");
   return (
     <Screen>
-      <AppBar back="history" brandLabel={c("brand")} />
+      <AppBar back="/signin" brandLabel={c("brand")} />
       <CurvesBackdrop>
         <PageTitle eyebrow={t("eyebrow")} title={t("title")} body={t("body")} />
         <RequestResetForm />

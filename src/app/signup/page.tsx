@@ -12,7 +12,7 @@ export default async function SignupPage() {
 
   return (
     <Screen>
-      <AppBar back="history" brandLabel={c("brand")} />
+      <AppBar back="/roles" brandLabel={c("brand")} />
       <CurvesBackdrop>
         <PageTitle eyebrow={t("eyebrow")} title={t("title")} body={t("body")} />
         <SignupForm />
